@@ -1,0 +1,19 @@
+Loaded 161 in-range OpenQASM circuits across corpora {'QASMBench': 39, 'MQT Bench': 42, 'VeriQBench': 80} (max_qubits=14, max_ops=220, max_per_corpus=80).
+0 circuits from checkpoints, 158 to run
+  10/158 circuits, 48s
+  20/158 circuits, 110s
+  30/158 circuits, 126s
+  40/158 circuits, 140s
+  50/158 circuits, 146s
+  60/158 circuits, 160s
+  70/158 circuits, 166s
+  80/158 circuits, 169s
+  90/158 circuits, 172s
+  100/158 circuits, 175s
+  110/158 circuits, 178s
+  120/158 circuits, 181s
+  130/158 circuits, 183s
+  140/158 circuits, 184s
+  150/158 circuits, 213s
+  158/158 circuits, 28856s
+mutants 5375, units 6034; wrote results/icpc/rq3

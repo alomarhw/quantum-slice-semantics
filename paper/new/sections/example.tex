@@ -1,0 +1,68 @@
+\section{A Classical Slice That Looks Right}\label{sec:example}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig_bv.pdf}
+  \caption{The Bernstein--Vazirani program of the Qiskit textbook~\cite{qiskittextbook}, with comments and blank lines
+  omitted and the textbook's line numbers kept. Line~25 carries a seeded fault, \texttt{x(n)} where the textbook
+  applies \texttt{z(n)}. The two columns mark the lines in the backward slice of $q_0$ under the classical PDG and
+  under the QDG. The classical slice misses the orange lines, which can change $q_0$. Each slice holds the lines of
+  its operations and the host lines that compute their qubits, as Section~\ref{sec:lines} describes. The operations of
+  each slice, the outcomes and the dependences are computed by the study's code, and the host lines by a classical slice
+  of the program.}
+  \label{fig:bv}
+\end{figure}
+
+This section shows, on a textbook program, how a slice computed the classical way can reproduce the output a
+developer sees and still hide the fault, and why a check of measured outcomes cannot tell. It starts with the
+quantum concepts the rest of the paper uses.
+
+\paragraph*{Background}
+A qubit's state is a superposition $\alpha\ket{0} + \beta\ket{1}$, and measuring it yields $0$ or $1$ with
+probabilities $|\alpha|^2$ and $|\beta|^2$. The states $\ket{+}$ and $\ket{-}$ give both outcomes equally often and
+differ only in phase, which no measurement in the computational basis, the standard measurement that reports $0$ or
+$1$, can see, and the Hadamard gate H turns
+$\ket{0}$ into $\ket{+}$ and back. The controlled-NOT (CNOT) flips its target when its control is $1$, but when the
+target is in $\ket{-}$ it leaves the target unchanged and flips the phase of its control instead. This is phase
+kickback, and it needs no entanglement, a joint state of two qubits that cannot be written as a product of their
+separate states. A
+measurement writes a classical bit that later gates may read. Qiskit programs build circuits in Python, with loops and
+functions that compute which gates act on which qubits.
+
+\paragraph*{The program}
+The Bernstein--Vazirani algorithm~\cite{bernstein1997qct} finds a hidden bit string $s$ with one query to an oracle.
+Fig.~\ref{fig:bv} shows the program of the Qiskit textbook~\cite{qiskittextbook}, with $s = 011$. Lines~24 and~25
+prepare the auxiliary qubit $q_3$ in $\ket{-}$, line~29 puts every data qubit in $\ket{+}$, and for every bit of $s$
+that is $1$, the CNOT of line~40 flips the phase of its data qubit, turning $\ket{+}$ into $\ket{-}$. The Hadamard
+gates of line~47 turn these phases into the bits of $s$. We seeded one fault, X instead of Z on line~25. It leaves
+the auxiliary in $\ket{+}$, on which a CNOT changes nothing, so the program returns \numBvBuggyOut{} instead of
+\numBvFixedOut{}.
+
+\paragraph*{The slices}
+The developer sees $q_0$ read $0$ where $s$ says $1$ and slices backward from $q_0$. A classical slicer reads
+\texttt{cx(q, n)} as the assignment $q_n \leftarrow q_n \oplus q$, which reads $q$ and writes only the auxiliary. Its
+slice of $q_0$, the left column of Fig.~\ref{fig:bv}, keeps the Hadamard gates of lines~\numBvCpdgLines{} and the
+lines that compute their qubits, \numBvCpdgClassical{}. The slice looks right. Its \numBvCpdgOps{} operations give
+$q_0$ the same state as the faulty program. Their fidelity, a similarity of quantum states that is $1$ exactly when
+they are equal, is \numBvCpdgFidelity{}, so nothing sends the developer to lines~\numBvMissedLines{}, where the
+fault is.
+
+Yet these lines can change $q_0$. Restoring Z on line~25 turns $q_0$ from $\ket{0}$ into $\ket{1}$, states with
+fidelity \numBvFixFidelity{}, because the CNOT acts on its control as well as its target. The QDG of
+Section~\ref{sec:core}, which lets every gate write all its qubits, keeps lines~\numBvQdgLines{} and the lines that
+compute them, among them the oracle's loop and condition on lines~35 to~37 and~39, and so contains the fault. The QPDG of Yu
+and Zhao keeps the same lines here, and Section~\ref{sec:rules} shows where it keeps
+more.
+
+\paragraph*{Why the outcomes cannot tell}
+Here the fault shows in the outcome of $q_0$, but not always. In a real bug from Bugs4Q~\cite{zhao2023bugs4q}, posted
+on Stack Overflow, a program meant to prepare $(\ket{01}+\ket{10})/\sqrt{2}$ applies \texttt{h(0)}, \texttt{h(1)} and
+\texttt{cx(0,1)}, with \texttt{h(1)} where \texttt{x(1)} was needed, and returns all four bit strings equally often.
+Each qubit alone reads $1$ with probability \numMotPOne{} in the buggy and the intended program alike, so only joint
+outcomes reveal the failure. The fault does change the state of $q_0$, a uniformly random bit in the intended program
+and the pure $\ket{+}$ in the buggy one, with fidelity \numMotFidelity{}. Because the CNOT writes its control, the QDG
+slice of $q_0$ contains the faulty \texttt{h(1)}, while the classical slice keeps only \texttt{h(0)}.
+
+Section~\ref{sec:results} shows that both lessons generalize. Reading a gate as an assignment misses influence that
+flows into a control, and judging a slice by one qubit's outcomes misses errors in phase and correlation, so a slice
+must be judged by the state of its qubits, as Section~\ref{sec:core} defines it.

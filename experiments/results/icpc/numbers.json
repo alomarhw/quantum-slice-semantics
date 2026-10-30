@@ -1,0 +1,3114 @@
+{
+ "NPairs": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "NCircuits": {
+  "value": 158,
+  "tex": "158",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuUnsound": {
+  "value": 216,
+  "tex": "216",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuUnsoundPct": {
+  "value": 0.2755102040816326,
+  "tex": "27.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuRecall": {
+  "value": 0.717607293380109,
+  "tex": "0.718",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuPrecision": {
+  "value": 0.9702694839603656,
+  "tex": "0.970",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuSize": {
+  "value": 0.5119337819212016,
+  "tex": "51.2\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneLcUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneLcUnsoundPct": {
+  "value": 0.0,
+  "tex": "0.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneLcRecall": {
+  "value": 1.0,
+  "tex": "1.000",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneLcPrecision": {
+  "value": 0.9232749570772351,
+  "tex": "0.923",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneLcSize": {
+  "value": 0.7036948679909367,
+  "tex": "70.4\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneYzUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneYzUnsoundPct": {
+  "value": 0.0,
+  "tex": "0.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneYzRecall": {
+  "value": 1.0,
+  "tex": "1.000",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneYzPrecision": {
+  "value": 0.8349990207678731,
+  "tex": "0.835",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneYzSize": {
+  "value": 0.7857218252650308,
+  "tex": "78.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneQUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneQUnsoundPct": {
+  "value": 0.0,
+  "tex": "0.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneQRecall": {
+  "value": 0.8065315828080251,
+  "tex": "0.807",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneQPrecision": {
+  "value": 0.9723126738738933,
+  "tex": "0.972",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneQSize": {
+  "value": 0.5402205554805595,
+  "tex": "54.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeUnfixedUnsound": {
+  "value": 5,
+  "tex": "5",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeUnfixedUnsoundPct": {
+  "value": 0.006377551020408163,
+  "tex": "0.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeUnfixedRecall": {
+  "value": 0.994390672935841,
+  "tex": "0.994",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeUnfixedPrecision": {
+  "value": 0.8644595599915934,
+  "tex": "0.864",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeUnfixedSize": {
+  "value": 0.7501121138122326,
+  "tex": "75.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeFixedUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeFixedUnsoundPct": {
+  "value": 0.0,
+  "tex": "0.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeFixedRecall": {
+  "value": 1.0,
+  "tex": "1.000",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeFixedPrecision": {
+  "value": 0.8640914153687904,
+  "tex": "0.864",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneFourEdgeFixedSize": {
+  "value": 0.7519697020856373,
+  "tex": "75.2\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "RqOneDuMissKickback": {
+  "value": 1737,
+  "tex": "1{,}737",
+  "source": "results/icpc/rq1/misses.csv"
+ },
+ "RqOneDuMissSameWire": {
+  "value": 835,
+  "tex": "835",
+  "source": "results/icpc/rq1/misses.csv"
+ },
+ "RqOneDuMissWrittenOperand": {
+  "value": 654,
+  "tex": "654",
+  "source": "results/icpc/rq1/misses.csv"
+ },
+ "RqOneDuMissFeedback": {
+  "value": 134,
+  "tex": "134",
+  "source": "results/icpc/rq1/misses.csv"
+ },
+ "RqOneQRemoved": {
+  "value": 2847,
+  "tex": "2{,}847",
+  "source": "results/icpc/rq1/pairs.csv"
+ },
+ "RqOneQRemovedNonInfluencing": {
+  "value": 669,
+  "tex": "669",
+  "source": "results/icpc/rq1/pairs.csv"
+ },
+ "RqOneQRemovedContributing": {
+  "value": 1618,
+  "tex": "1{,}618",
+  "source": "results/icpc/rq1/pairs.csv"
+ },
+ "RqOneQPrunedPairs": {
+  "value": 477,
+  "tex": "477",
+  "source": "results/icpc/rq1/pairs.csv"
+ },
+ "LcqApplicable": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqNotApplicable": {
+  "value": 52,
+  "tex": "52",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqNaMeasurements": {
+  "value": 42,
+  "tex": "42",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqNaReorder": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqSmallerThanLc": {
+  "value": 243,
+  "tex": "243",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqRecall": {
+  "value": 0.930308711783841,
+  "tex": "0.930",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqDynamicN": {
+  "value": 38,
+  "tex": "38",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "QVsLcqReduction": {
+  "value": 0.12286088984762125,
+  "tex": "12.3\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "QVsLcqReductionPooled": {
+  "value": 0.10822285763798634,
+  "tex": "10.8\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "QLargerThanLcq": {
+  "value": 72,
+  "tex": "72",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "HOnePHolm": {
+  "value": 3.7982270983039195e-65,
+  "tex": "p < 10^{-10}",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoDiff": {
+  "value": 0.16347431251037725,
+  "tex": "16.3",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoCILow": {
+  "value": 0.15093353240485863,
+  "tex": "15.1",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoCIHigh": {
+  "value": 0.17650332554908665,
+  "tex": "17.7",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoRelative": {
+  "value": 0.23230851885718562,
+  "tex": "23.2\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoSmaller": {
+  "value": 477,
+  "tex": "477",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoPHolm": {
+  "value": 2.1312764230604268e-79,
+  "tex": "p < 10^{-10}",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HTwoR": {
+  "value": 1.0,
+  "tex": "1.00",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreeRate": {
+  "value": 0.5535714285714286,
+  "tex": "55.4\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreeCILow": {
+  "value": 0.5185962868931138,
+  "tex": "51.9\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreeCIHigh": {
+  "value": 0.5880241493038805,
+  "tex": "58.8\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreePrunedRate": {
+  "value": 0.2662473794549266,
+  "tex": "26.6\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreePrunedRobust": {
+  "value": 127,
+  "tex": "127",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreePrunedN": {
+  "value": 477,
+  "tex": "477",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourContainQ": {
+  "value": 0.8217299578059072,
+  "tex": "82.2\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourContainLc": {
+  "value": 0.9569268635724332,
+  "tex": "95.7\\%",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourDiff": {
+  "value": -0.13519690576652602,
+  "tex": "\\ensuremath{-}13.5",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourDiffAbs": {
+  "value": 0.13519690576652602,
+  "tex": "13.5",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourCILow": {
+  "value": -0.1439873417721519,
+  "tex": "\\ensuremath{-}14.4",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourCIHigh": {
+  "value": -0.12623066104078762,
+  "tex": "\\ensuremath{-}12.6",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFiveSizeDiff": {
+  "value": 2.8947368421052633,
+  "tex": "2.9",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFiveExamDiff": {
+  "value": -0.06099228483503924,
+  "tex": "\\ensuremath{-}0.061",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFiveExamQHigher": {
+  "value": 0.06099228483503924,
+  "tex": "0.061",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HThreePHolm": {
+  "value": 1.0,
+  "tex": "p = 1.00",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourPHolm": {
+  "value": 2.5764595078388533e-231,
+  "tex": "p < 10^{-10}",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFivePHolm": {
+  "value": 0.0,
+  "tex": "p < 10^{-10}",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourOnlyLc": {
+  "value": 769,
+  "tex": "769",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFourOnlyQ": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFiveExamP": {
+  "value": 2.7274671979995712e-251,
+  "tex": "p < 10^{-10}",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "HFiveN": {
+  "value": 4674,
+  "tex": "4{,}674",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "RobQPrunedBasis": {
+  "value": 0.6582809224318659,
+  "tex": "65.8\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobLcBasis": {
+  "value": 1.0,
+  "tex": "100.0\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobQPrunedHaar": {
+  "value": 0.2662473794549266,
+  "tex": "26.6\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobLcHaar": {
+  "value": 1.0,
+  "tex": "100.0\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobQPrunedParam": {
+  "value": 0.7807017543859649,
+  "tex": "78.1\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobLcParam": {
+  "value": 1.0,
+  "tex": "100.0\\%",
+  "source": "results/icpc/rq2_robustness/pairs.csv"
+ },
+ "RobLcqBasisRobust": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "RobLcqBasisN": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "RobLcqHaarRobust": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "RobLcqHaarN": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "RobLcqParamRobust": {
+  "value": 171,
+  "tex": "171",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "RobLcqParamN": {
+  "value": 175,
+  "tex": "175",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "AblUnfixedFull": {
+  "value": 0.0052,
+  "tex": "0.5\\%",
+  "source": "results/rq4_ablation/TAB_ablation_rerun.csv"
+ },
+ "AblUnfixedNoED": {
+  "value": 0.5405,
+  "tex": "54.0\\%",
+  "source": "results/rq4_ablation/TAB_ablation_rerun.csv"
+ },
+ "AblUnfixedNoMD": {
+  "value": 0.1341,
+  "tex": "13.4\\%",
+  "source": "results/rq4_ablation/TAB_ablation_rerun.csv"
+ },
+ "AblUnfixedNoUED": {
+  "value": 0.1331,
+  "tex": "13.3\\%",
+  "source": "results/rq4_ablation/TAB_ablation_rerun.csv"
+ },
+ "AblUnfixedNoCD": {
+  "value": 0.0478,
+  "tex": "4.8\\%",
+  "source": "results/rq4_ablation/TAB_ablation_rerun.csv"
+ },
+ "AblFixedFull": {
+  "value": 0.0,
+  "tex": "0.0\\%",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "AblFixedNoED": {
+  "value": 0.6393,
+  "tex": "63.9\\%",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "AblFixedNoMD": {
+  "value": 0.1299,
+  "tex": "13.0\\%",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "AblFixedNoUED": {
+  "value": 0.2609,
+  "tex": "26.1\\%",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "AblFixedNoCD": {
+  "value": 0.0665,
+  "tex": "6.7\\%",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "AblPairs": {
+  "value": 962,
+  "tex": "962",
+  "source": "results/icpc/ablation_fixed/TAB_ablation_rerun.csv"
+ },
+ "FamCircuits": {
+  "value": 119,
+  "tex": "119",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamLcUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamYzUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamQUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamDuUnsound": {
+  "value": 232,
+  "tex": "232",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamQSoundNotMinimal": {
+  "value": 212,
+  "tex": "212",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "FamQRows": {
+  "value": 819,
+  "tex": "819",
+  "source": "results/icpc/families/rows.csv"
+ },
+ "CatEntries": {
+  "value": 24,
+  "tex": "24",
+  "source": "results/icpc/catalogue/catalogue.json"
+ },
+ "RqThreeUnits": {
+  "value": 5688,
+  "tex": "5{,}688",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeContainDu": {
+  "value": 0.7730309423347398,
+  "tex": "77.3\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeContainLc": {
+  "value": 0.9569268635724332,
+  "tex": "95.7\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeContainYz": {
+  "value": 0.9738045007032349,
+  "tex": "97.4\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeContainQ": {
+  "value": 0.8217299578059072,
+  "tex": "82.2\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeContainRandom": {
+  "value": 0.6243565400843882,
+  "tex": "62.4\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "LcMissYzContained": {
+  "value": 96,
+  "tex": "96",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "CQFour": {
+  "value": 769,
+  "tex": "769",
+  "source": "results/icpc/rq3/units.csv"
+ },
+ "CQFourRecovered": {
+  "value": 691,
+  "tex": "691",
+  "source": "results/icpc/rq3/units.csv"
+ },
+ "BugsFourQKilled": {
+  "value": 7,
+  "tex": "seven",
+  "source": "results/icpc/rq3_bugs4q/bugs.csv"
+ },
+ "BugsFourQInjured": {
+  "value": 1,
+  "tex": "one",
+  "source": "results/icpc/rq3_bugs4q/bugs.csv"
+ },
+ "BugsFourQAlive": {
+  "value": 1,
+  "tex": "one",
+  "source": "results/icpc/rq3_bugs4q/bugs.csv"
+ },
+ "BugsFourQExcluded": {
+  "value": 2,
+  "tex": "two",
+  "source": "results/icpc/rq3_bugs4q/bugs.csv"
+ },
+ "BugsFourQTriaged": {
+  "value": 107,
+  "tex": "107",
+  "source": "bugs4q/triage.csv"
+ },
+ "BugsFourQIncluded": {
+  "value": 11,
+  "tex": "11",
+  "source": "bugs4q/triage.csv"
+ },
+ "MapInstructions": {
+  "value": 137,
+  "tex": "137",
+  "source": "results/icpc/source_map/bugs.csv"
+ },
+ "MapMapped": {
+  "value": 136,
+  "tex": "136",
+  "source": "results/icpc/source_map/bugs.csv"
+ },
+ "MapCrossCompared": {
+  "value": 127,
+  "tex": "127",
+  "source": "results/icpc/source_map/crosscheck.csv"
+ },
+ "MapCrossAgree": {
+  "value": 127,
+  "tex": "127",
+  "source": "results/icpc/source_map/crosscheck.csv"
+ },
+ "MapCrossPrograms": {
+  "value": 5,
+  "tex": "5",
+  "source": "results/icpc/source_map/crosscheck.csv"
+ },
+ "LinesFullContained": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesFullMean": {
+  "value": 10.733333333333333,
+  "tex": "10.7",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesLcContained": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesLcMean": {
+  "value": 10.333333333333334,
+  "tex": "10.3",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesQContained": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesQMean": {
+  "value": 9.466666666666667,
+  "tex": "9.5",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesDuContained": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesDuMean": {
+  "value": 4.933333333333334,
+  "tex": "4.9",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesUnits": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "BugsFourQUnits": {
+  "value": 17,
+  "tex": "17",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "LinesDuMissed": {
+  "value": 1,
+  "tex": "one",
+  "source": "results/icpc/source_map/units.csv"
+ },
+ "MbflUnits": {
+  "value": 293,
+  "tex": "293",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflNLc": {
+  "value": 287,
+  "tex": "287",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflNQ": {
+  "value": 264,
+  "tex": "264",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflExamAll": {
+  "value": 0.34842983613459044,
+  "tex": "0.348",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflExamQ": {
+  "value": 0.46487860385020346,
+  "tex": "0.465",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflExamLc": {
+  "value": 0.4191227207622083,
+  "tex": "0.419",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflPairedN": {
+  "value": 264,
+  "tex": "264",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflPairedAll": {
+  "value": 0.3363898063169404,
+  "tex": "0.336",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflPairedQ": {
+  "value": 0.46487860385020346,
+  "tex": "0.465",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "MbflPairedLc": {
+  "value": 0.41531323451241176,
+  "tex": "0.415",
+  "source": "results/icpc/mbfl/units.csv"
+ },
+ "TTwoSonnetFull": {
+  "value": 0.8442028985507246,
+  "tex": "84.4\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetLc": {
+  "value": 0.7717391304347826,
+  "tex": "77.2\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQ": {
+  "value": 0.6992753623188406,
+  "tex": "69.9\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetDu": {
+  "value": 0.6231884057971014,
+  "tex": "62.3\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsFullDiff": {
+  "value": -0.14492753623188406,
+  "tex": "\\ensuremath{-}14.5",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsFullCI": {
+  "value": [
+   -0.19927536231884058,
+   -0.09420289855072464
+  ],
+  "tex": "[\\ensuremath{-}19.9, \\ensuremath{-}9.4]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsFullP": {
+  "value": 1.6163814566157175e-07,
+  "tex": "p = 1.6\\times 10^{-7}",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsLcDiff": {
+  "value": -0.07246376811594203,
+  "tex": "\\ensuremath{-}7.2",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsLcCI": {
+  "value": [
+   -0.12318840579710146,
+   -0.025362318840579712
+  ],
+  "tex": "[\\ensuremath{-}12.3, \\ensuremath{-}2.5]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoSonnetQVsLcP": {
+  "value": 0.00551520148550111,
+  "tex": "p = 0.006",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuFull": {
+  "value": 0.7137681159420289,
+  "tex": "71.4\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuLc": {
+  "value": 0.6594202898550725,
+  "tex": "65.9\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQ": {
+  "value": 0.5869565217391305,
+  "tex": "58.7\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuDu": {
+  "value": 0.5181159420289855,
+  "tex": "51.8\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsFullDiff": {
+  "value": -0.12681159420289856,
+  "tex": "\\ensuremath{-}12.7",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsFullCI": {
+  "value": [
+   -0.18840579710144928,
+   -0.06521739130434782
+  ],
+  "tex": "[\\ensuremath{-}18.8, \\ensuremath{-}6.5]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsFullP": {
+  "value": 8.215921903007378e-05,
+  "tex": "p = 8.2\\times 10^{-5}",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsLcDiff": {
+  "value": -0.07246376811594203,
+  "tex": "\\ensuremath{-}7.2",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsLcCI": {
+  "value": [
+   -0.12681159420289856,
+   -0.021739130434782608
+  ],
+  "tex": "[\\ensuremath{-}12.7, \\ensuremath{-}2.2]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoHaikuQVsLcP": {
+  "value": 0.01045481832189218,
+  "tex": "p = 0.010",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidFull": {
+  "value": 0.427536231884058,
+  "tex": "42.8\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidLc": {
+  "value": 0.4311594202898551,
+  "tex": "43.1\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQ": {
+  "value": 0.36231884057971014,
+  "tex": "36.2\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidDu": {
+  "value": 0.3333333333333333,
+  "tex": "33.3\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsFullDiff": {
+  "value": -0.06521739130434782,
+  "tex": "\\ensuremath{-}6.5",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsFullCI": {
+  "value": [
+   -0.11594202898550725,
+   -0.014492753623188406
+  ],
+  "tex": "[\\ensuremath{-}11.6, \\ensuremath{-}1.4]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsFullP": {
+  "value": 0.01983432672806828,
+  "tex": "p = 0.020",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsLcDiff": {
+  "value": -0.06884057971014493,
+  "tex": "\\ensuremath{-}6.9",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsLcCI": {
+  "value": [
+   -0.11231884057971014,
+   -0.025362318840579712
+  ],
+  "tex": "[\\ensuremath{-}11.2, \\ensuremath{-}2.5]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenMidQVsLcP": {
+  "value": 0.0033778479119064286,
+  "tex": "p = 0.003",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallFull": {
+  "value": 0.13043478260869565,
+  "tex": "13.0\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallLc": {
+  "value": 0.12681159420289856,
+  "tex": "12.7\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQ": {
+  "value": 0.13043478260869565,
+  "tex": "13.0\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallDu": {
+  "value": 0.13405797101449277,
+  "tex": "13.4\\%",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsFullDiff": {
+  "value": 0.0,
+  "tex": "0.0",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsFullCI": {
+  "value": [
+   -0.043478260869565216,
+   0.043478260869565216
+  ],
+  "tex": "[\\ensuremath{-}4.3, 4.3]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsFullP": {
+  "value": 1.0,
+  "tex": "p = 1.00",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsLcDiff": {
+  "value": 0.0036231884057971015,
+  "tex": "0.4",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsLcCI": {
+  "value": [
+   -0.028985507246376812,
+   0.036231884057971016
+  ],
+  "tex": "[\\ensuremath{-}2.9, 3.6]",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoQwenSmallQVsLcP": {
+  "value": 1.0,
+  "tex": "p = 1.00",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoItems": {
+  "value": 276,
+  "tex": "276",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TTwoMaxDrop": {
+  "value": 0.14492753623188406,
+  "tex": "14.5",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "TOneSonnetRecall": {
+  "value": 0.8367837099395669,
+  "tex": "0.84",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneSonnetPrec": {
+  "value": 0.9305069598005433,
+  "tex": "0.93",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneSonnetKick": {
+  "value": 0.6124293530543531,
+  "tex": "0.61",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneHaikuRecall": {
+  "value": 0.8437474422273857,
+  "tex": "0.84",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneHaikuPrec": {
+  "value": 0.9392372664484244,
+  "tex": "0.94",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneHaikuKick": {
+  "value": 0.8302118406285073,
+  "tex": "0.83",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenMidRecall": {
+  "value": 0.5944070584844481,
+  "tex": "0.59",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenMidPrec": {
+  "value": 0.9104938147777816,
+  "tex": "0.91",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenMidKick": {
+  "value": 0.15507444431786538,
+  "tex": "0.16",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenSmallRecall": {
+  "value": 0.5895383447506357,
+  "tex": "0.59",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenSmallPrec": {
+  "value": 0.71131098100109,
+  "tex": "0.71",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneQwenSmallKick": {
+  "value": 0.5751644103946736,
+  "tex": "0.58",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "TOneItems": {
+  "value": 171,
+  "tex": "171",
+  "source": "results/llm/t1_scores.csv"
+ },
+ "CostLcMaxMs": {
+  "value": 0.0162,
+  "tex": "16",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostQDepthTen": {
+  "value": 1.3682,
+  "tex": "1.4",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostBuildDepthTen": {
+  "value": 0.0346,
+  "tex": "0.03",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostQDepthTwenty": {
+  "value": 10.6197,
+  "tex": "10.6",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostBuildDepthTwenty": {
+  "value": 0.2696,
+  "tex": "0.27",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostQDepthForty": {
+  "value": 49.9275,
+  "tex": "49.9",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostBuildDepthForty": {
+  "value": 1.0971,
+  "tex": "1.10",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostDepthEightyOverLimit": {
+  "value": 4,
+  "tex": "four",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostBuildDepthEighty": {
+  "value": 5.2266,
+  "tex": "5.2",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostDepthOneSixtyOverLimit": {
+  "value": 5,
+  "tex": "five",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostBuildDepthOneSixty": {
+  "value": 21.7172,
+  "tex": "21.7",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostMeasuredDepthForty": {
+  "value": 91,
+  "tex": "91",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostMeasuredDepthOneSixty": {
+  "value": 380,
+  "tex": "380",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostWallLimit": {
+  "value": 120,
+  "tex": "120",
+  "source": "icpc/cost_run.py"
+ },
+ "CostDepthCircuits": {
+  "value": 5,
+  "tex": "five",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostDepthWidth": {
+  "value": 8,
+  "tex": "8",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostWidthQMax": {
+  "value": 8.6855,
+  "tex": "8.7",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CostWidthMaxQubits": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/cost/circuits.csv"
+ },
+ "CorpusLCircuits": {
+  "value": 55,
+  "tex": "55",
+  "source": "results/icpc/corpus_l/circuits.csv"
+ },
+ "CorpusLMinQubits": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/corpus_l/circuits.csv"
+ },
+ "CorpusLMaxQubits": {
+  "value": 20,
+  "tex": "20",
+  "source": "results/icpc/corpus_l/circuits.csv"
+ },
+ "CorpusLCompleted": {
+  "value": 39,
+  "tex": "39",
+  "source": "results/icpc/corpus_l/circuits.csv"
+ },
+ "NoiseMaxQubits": {
+  "value": 10,
+  "tex": "ten",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseLcCrossExactMax": {
+  "value": 4.249205154405189e-15,
+  "tex": "\\ensuremath{4.2\\times 10^{-15}}",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseLcCrossExactNonzero": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseLcCrossExactN": {
+  "value": 1746,
+  "tex": "1{,}746",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseLcCrossShotMax": {
+  "value": 0.03319316505856096,
+  "tex": "0.033",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseQCrossExactMax": {
+  "value": 0.2448448108167967,
+  "tex": "0.24",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseQCrossExactNonzero": {
+  "value": 702,
+  "tex": "702",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseQCrossExactN": {
+  "value": 1746,
+  "tex": "1{,}746",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseQCrossShotMax": {
+  "value": 0.03319316505856096,
+  "tex": "0.033",
+  "source": "results/icpc/noise/pairs.csv"
+ },
+ "NoiseShots": {
+  "value": 1024,
+  "tex": "1{,}024",
+  "source": "icpc/noise_run.py"
+ },
+ "CpdgUnsound": {
+  "value": 204,
+  "tex": "204",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "CpdgUnsoundPct": {
+  "value": 0.2602040816326531,
+  "tex": "26.0\\%",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "CpdgRecall": {
+  "value": 0.7410165714806879,
+  "tex": "0.741",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "CpdgSize": {
+  "value": 0.5304047196745563,
+  "tex": "53.0\\%",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "CpdgDynamicUnsound": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "NDynamicPairs": {
+  "value": 80,
+  "tex": "80",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "CpdgUnitaryUnsound": {
+  "value": 203,
+  "tex": "203",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "DuDynamicUnsound": {
+  "value": 13,
+  "tex": "13",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "CpdgMissKickback": {
+  "value": 1688,
+  "tex": "1{,}688",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "CpdgMissFeedback": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "CpdgMissSameWire": {
+  "value": 822,
+  "tex": "822",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "CpdgMissWritten": {
+  "value": 654,
+  "tex": "654",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "CpdgMissTotal": {
+  "value": 3174,
+  "tex": "3{,}174",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "RqThreeContainCpdg": {
+  "value": 0.7883263009845288,
+  "tex": "78.8\\%",
+  "source": "results/icpc/cpdg/rq3_records.csv"
+ },
+ "FamCpdgUnsound": {
+  "value": 232,
+  "tex": "232",
+  "source": "results/icpc/cpdg/families_rows.csv"
+ },
+ "PairsMqt": {
+  "value": 284,
+  "tex": "284",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "CircuitsMqt": {
+  "value": 40,
+  "tex": "40",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "PairsQasm": {
+  "value": 202,
+  "tex": "202",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "CircuitsQasm": {
+  "value": 38,
+  "tex": "38",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "PairsVeriq": {
+  "value": 298,
+  "tex": "298",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "CircuitsVeriq": {
+  "value": 80,
+  "tex": "80",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "MaxQubits": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "Mutants": {
+  "value": 5375,
+  "tex": "5{,}375",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutantsKilled": {
+  "value": 2662,
+  "tex": "2{,}662",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutantsInjured": {
+  "value": 240,
+  "tex": "240",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutantsAlive": {
+  "value": 2312,
+  "tex": "2{,}312",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutantsEquivalent": {
+  "value": 157,
+  "tex": "157",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutantsExcluded": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutOperators": {
+  "value": 10,
+  "tex": "ten",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "MutPublished": {
+  "value": 9,
+  "tex": "nine",
+  "source": "results/icpc/rq3/mutants.csv"
+ },
+ "RqThreeSecondary": {
+  "value": 346,
+  "tex": "346",
+  "source": "results/icpc/rq3/units.csv"
+ },
+ "OracleErr": {
+  "value": 2.2e-16,
+  "tex": "\\ensuremath{2.2\\times 10^{-16}}",
+  "source": "experiments/logs/icpc/test_oracle_icpc.log (joint rho_W vs Statevector/partial_trace, random unitary circuits)"
+ },
+ "InfluenceInputs": {
+  "value": 11,
+  "tex": "11",
+  "source": "icpc/influence.py (|0...0> + N_INPUTS=10)"
+ },
+ "InfluencePerturbations": {
+  "value": 2,
+  "tex": "two",
+  "source": "icpc/influence.py (N_PERTURBATIONS)"
+ },
+ "RobDraws": {
+  "value": 100,
+  "tex": "100",
+  "source": "icpc/rq2_robustness.py (N_DRAWS)"
+ },
+ "CostMemLimit": {
+  "value": 4,
+  "tex": "4",
+  "source": "icpc/cost_run.py (RSS_GIB)"
+ },
+ "LcqPrecision": {
+  "value": 0.9670105699008265,
+  "tex": "0.967",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "LcqSize": {
+  "value": 0.6441428844428471,
+  "tex": "64.4\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "CpdgPrecision": {
+  "value": 0.9620551982460799,
+  "tex": "0.962",
+  "source": "results/icpc/cpdg/rq1_records.csv"
+ },
+ "RqThreeSizeLc": {
+  "value": 0.7680706974698921,
+  "tex": "76.8\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeSizeYz": {
+  "value": 0.8288491758738917,
+  "tex": "82.9\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeSizeQ": {
+  "value": 0.6050831130955547,
+  "tex": "60.5\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeSizeDu": {
+  "value": 0.5749383157866916,
+  "tex": "57.5\\%",
+  "source": "results/icpc/rq3/records.csv"
+ },
+ "RqThreeSizeCpdg": {
+  "value": 0.5903591932774798,
+  "tex": "59.0\\%",
+  "source": "results/icpc/cpdg/rq3_records.csv"
+ },
+ "LcMissTotal": {
+  "value": 245,
+  "tex": "245",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "LcMissCrm": {
+  "value": 66,
+  "tex": "66",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "LcMissQsw": {
+  "value": 91,
+  "tex": "91",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "LcMissEnt": {
+  "value": 59,
+  "tex": "59",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "LcMissDel": {
+  "value": 29,
+  "tex": "29",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "LcMissOtherOps": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq3/records.csv + units.csv"
+ },
+ "HFourLoss": {
+  "value": 0.13519690576652602,
+  "tex": "13.5",
+  "source": "results/icpc/confirmatory/summary.json"
+ },
+ "TTwoSonnetQVsLcLoss": {
+  "value": 0.07246376811594203,
+  "tex": "7.2",
+  "source": "results/llm/t2_scores.csv"
+ },
+ "RobLcqParamFail": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/rq2_robustness_lcq/pairs.csv"
+ },
+ "YzDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "LcDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "QDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "DepFloor": {
+  "value": 0.6563708382103166,
+  "tex": "65.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "DepFloorMedian": {
+  "value": 0.7142857142857143,
+  "tex": "71.4\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "LcExcess": {
+  "value": 0.04732402978062013,
+  "tex": "4.8",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "LcExact": {
+  "value": 559,
+  "tex": "559",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "LcExcessPairs": {
+  "value": 225,
+  "tex": "225",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "YzExcess": {
+  "value": 0.12935098705471418,
+  "tex": "13.0",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "PairsAllDep": {
+  "value": 180,
+  "tex": "180",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoLo": {
+  "value": 2,
+  "tex": "2",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoHi": {
+  "value": 3,
+  "tex": "3",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoPairs": {
+  "value": 110,
+  "tex": "110",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoFloor": {
+  "value": 0.8202109814927856,
+  "tex": "82.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoLc": {
+  "value": 0.8364828483662567,
+  "tex": "83.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoYz": {
+  "value": 0.876215558240115,
+  "tex": "87.6\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WTwoLcq": {
+  "value": 0.8259793492315083,
+  "tex": "82.6\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "WFourLo": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourHi": {
+  "value": 6,
+  "tex": "6",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourPairs": {
+  "value": 377,
+  "tex": "377",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourFloor": {
+  "value": 0.7499231733850629,
+  "tex": "75.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourLc": {
+  "value": 0.7773543709797699,
+  "tex": "77.7\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourYz": {
+  "value": 0.8167093817127544,
+  "tex": "81.7\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WFourLcq": {
+  "value": 0.7549661001453086,
+  "tex": "75.5\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "WSevenLo": {
+  "value": 7,
+  "tex": "7",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenHi": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenPairs": {
+  "value": 150,
+  "tex": "150",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenFloor": {
+  "value": 0.5273852867433312,
+  "tex": "52.7\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenLc": {
+  "value": 0.5993219269107247,
+  "tex": "59.9\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenYz": {
+  "value": 0.7116980114648087,
+  "tex": "71.2\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WSevenLcq": {
+  "value": 0.5014185801099952,
+  "tex": "50.1\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "WElevenLo": {
+  "value": 11,
+  "tex": "11",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenHi": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenPairs": {
+  "value": 145,
+  "tex": "145",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenFloor": {
+  "value": 0.4175358607931961,
+  "tex": "41.8\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenLc": {
+  "value": 0.5153294916456841,
+  "tex": "51.5\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenYz": {
+  "value": 0.710124558454771,
+  "tex": "71.0\\%",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "WElevenLcq": {
+  "value": 0.390398737716644,
+  "tex": "39.0\\%",
+  "source": "results/icpc/rq1_lcq_remap/records.csv"
+ },
+ "CorpusLEmpty": {
+  "value": 2,
+  "tex": "2",
+  "source": "results/icpc/corpus_l/circuits.csv"
+ },
+ "CorpusLSizeLc": {
+  "value": 0.5584334848813827,
+  "tex": "55.8\\%",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeLcN": {
+  "value": 876,
+  "tex": "876",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeLcq": {
+  "value": 0.43175108505982457,
+  "tex": "43.2\\%",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeLcqN": {
+  "value": 762,
+  "tex": "762",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeYz": {
+  "value": 0.7201641549184432,
+  "tex": "72.0\\%",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeYzN": {
+  "value": 876,
+  "tex": "876",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeQ": {
+  "value": 0.23656616699121455,
+  "tex": "23.7\\%",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSizeQN": {
+  "value": 651,
+  "tex": "651",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CostLcMaxCritMs": {
+  "value": 6.83,
+  "tex": "7",
+  "source": "results/icpc/cost/stages.jsonl"
+ },
+ "LcqsSize": {
+  "value": 0.651617965025442,
+  "tex": "65.2\\%",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsN": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsRecall": {
+  "value": 0.9392218416949525,
+  "tex": "0.939",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsPrecision": {
+  "value": 0.9659508969285853,
+  "tex": "0.966",
+  "source": "results/icpc/rq1_lcq_symbolic/records.csv"
+ },
+ "LcqsParamRobust": {
+  "value": 175,
+  "tex": "175",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "LcqsParamN": {
+  "value": 175,
+  "tex": "175",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "LcqsBasisRobust": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "LcqsBasisN": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "LcqsHaarRobust": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "LcqsHaarN": {
+  "value": 732,
+  "tex": "732",
+  "source": "results/icpc/rq1_lcq_symbolic/robustness.csv"
+ },
+ "YzfN": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfSize": {
+  "value": 0.7753642243994814,
+  "tex": "77.5\\%",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfDynamicUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfRecall": {
+  "value": 1.0,
+  "tex": "1.000",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfPrecision": {
+  "value": 0.8486663064075879,
+  "tex": "0.849",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfExcess": {
+  "value": 11.900000000000006,
+  "tex": "11.9",
+  "source": "results/icpc/yz_flow/records.csv"
+ },
+ "YzfFamUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/yz_flow/families.csv"
+ },
+ "FdPairs": {
+  "value": 779,
+  "tex": "779",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdIdleQubits": {
+  "value": 5,
+  "tex": "5",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "FdFourEdgeNoClosureEqual": {
+  "value": 779,
+  "tex": "779",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdFourEdgeSize": {
+  "value": 0.7567962085175092,
+  "tex": "75.7\\%",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdFourEdgeEqual": {
+  "value": 522,
+  "tex": "522",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdFourEdgePrecision": {
+  "value": 0.8632190881246876,
+  "tex": "0.863",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdUndSize": {
+  "value": 0.9388702402878883,
+  "tex": "93.9\\%",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdUndPrecision": {
+  "value": 0.7129269034821393,
+  "tex": "0.713",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdUndEqual": {
+  "value": 231,
+  "tex": "231",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdLcPrecision": {
+  "value": 0.92278249852189,
+  "tex": "0.923",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdCpdgUnsound": {
+  "value": 204,
+  "tex": "204",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdCpdgZMatch": {
+  "value": 88,
+  "tex": "88",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdCpdgZMatchPct": {
+  "value": 0.43137254901960786,
+  "tex": "43\\%",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdDuUnsound": {
+  "value": 216,
+  "tex": "216",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdDuZMatch": {
+  "value": 88,
+  "tex": "88",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdDuZMatchPct": {
+  "value": 0.4074074074074074,
+  "tex": "41\\%",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdFwdOps": {
+  "value": 3156,
+  "tex": "3{,}156",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdFwdPrecision": {
+  "value": 0.9303472509746274,
+  "tex": "0.930",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdCpdgObservable": {
+  "value": 116,
+  "tex": "116",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "FdCpdgObservablePct": {
+  "value": 0.14795918367346939,
+  "tex": "14.8\\%",
+  "source": "results/icpc/foundations/summary.json"
+ },
+ "CorpusLSoundCircuits": {
+  "value": 39,
+  "tex": "39",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLSoundPairs": {
+  "value": 633,
+  "tex": "633",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLWrongLc": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLWrongYz": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "CorpusLWrongDu": {
+  "value": 205,
+  "tex": "205",
+  "source": "results/icpc/corpus_l/slices.csv"
+ },
+ "MotFidelity": {
+  "value": 0.49999999999999967,
+  "tex": "0.50",
+  "source": "paper/figures/src/fig_motivating_facts.json"
+ },
+ "MotPOne": {
+  "value": 0.4999999999999998,
+  "tex": "0.5",
+  "source": "paper/figures/src/fig_motivating_facts.json"
+ },
+ "MotDuFidelity": {
+  "value": 0.9999999999999993,
+  "tex": "1.00",
+  "source": "paper/figures/src/fig_motivating_facts.json"
+ },
+ "BvCpdgLines": {
+  "value": [
+   29,
+   47
+  ],
+  "tex": "29 and 47",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvQdgLines": {
+  "value": [
+   24,
+   25,
+   29,
+   40,
+   47
+  ],
+  "tex": "24, 25, 29, 40 and 47",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvMissedLines": {
+  "value": [
+   24,
+   25,
+   40
+  ],
+  "tex": "24, 25 and 40",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvCpdgClassical": {
+  "value": [
+   16,
+   21,
+   28,
+   46
+  ],
+  "tex": "16, 21, 28 and 46",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvQdgClassical": {
+  "value": [
+   16,
+   17,
+   21,
+   28,
+   35,
+   36,
+   37,
+   39,
+   46
+  ],
+  "tex": "16, 17, 21, 28, 35, 36, 37, 39 and 46",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvCpdgFidelity": {
+  "value": 0.9999999999999984,
+  "tex": "1.00",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvFixFidelity": {
+  "value": 3.6284213880533408e-34,
+  "tex": "0.00",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvOps": {
+  "value": 11,
+  "tex": "11",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvQdgOps": {
+  "value": 5,
+  "tex": "5",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvCpdgOps": {
+  "value": 2,
+  "tex": "2",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfDefs": {
+  "value": [
+   29,
+   40,
+   47,
+   51
+  ],
+  "tex": "29, 40, 47 and 51",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfNameI": {
+  "value": [
+   29,
+   47,
+   51
+  ],
+  "tex": "29, 47 and 51",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfNameQ": {
+  "value": [
+   40
+  ],
+  "tex": "40",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfDependents": {
+  "value": [
+   1,
+   3
+  ],
+  "tex": "$q_1$ and $q_3$",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfBits": {
+  "value": [
+   0
+  ],
+  "tex": "$c_0$",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfForward": {
+  "value": [
+   29,
+   40,
+   47,
+   51
+  ],
+  "tex": "29, 40, 47 and 51",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfDefsSet": {
+  "value": [
+   29,
+   40,
+   47,
+   51
+  ],
+  "tex": "\\{29, 40, 47, 51\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfNameISet": {
+  "value": [
+   29,
+   47,
+   51
+  ],
+  "tex": "\\{29, 47, 51\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfNameQSet": {
+  "value": [
+   40
+  ],
+  "tex": "\\{40\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfDependentsSet": {
+  "value": [
+   1,
+   3
+  ],
+  "tex": "\\{q_1, q_3\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfBitsSet": {
+  "value": [
+   0
+  ],
+  "tex": "\\{c_0\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfBackwardSet": {
+  "value": [
+   24,
+   25,
+   29,
+   40,
+   47
+  ],
+  "tex": "\\{24, 25, 29, 40, 47\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvProfForwardSet": {
+  "value": [
+   29,
+   40,
+   47,
+   51
+  ],
+  "tex": "\\{29, 40, 47, 51\\}",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvBuggyOut": {
+  "value": "000",
+  "tex": "000",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "BvFixedOut": {
+  "value": "011",
+  "tex": "011",
+  "source": "paper/figures/src/fig_bv_facts.json"
+ },
+ "TelDuOps": {
+  "value": 4,
+  "tex": "4",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "TelDuFidelity": {
+  "value": 0.4999999999999999,
+  "tex": "0.50",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "TelOps": {
+  "value": 9,
+  "tex": "9",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsOps": {
+  "value": 19,
+  "tex": "19",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsCpdgOps": {
+  "value": 7,
+  "tex": "7",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsCpdgFidelity": {
+  "value": 0.9726944017672795,
+  "tex": "0.97",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsWireOps": {
+  "value": 16,
+  "tex": "16",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsDuOps": {
+  "value": 5,
+  "tex": "5",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsDuFidelity": {
+  "value": 0.545726495309552,
+  "tex": "0.55",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsCpdgMissed": {
+  "value": 9,
+  "tex": "9",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsQdgFidelity": {
+  "value": 0.9999999999999999,
+  "tex": "1.00",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsYzOps": {
+  "value": 19,
+  "tex": "19",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsYzFidelity": {
+  "value": 0.9999999999999997,
+  "tex": "1.00",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsYzroOps": {
+  "value": 19,
+  "tex": "19",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsYzroFidelity": {
+  "value": 0.9999999999999997,
+  "tex": "1.00",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "AnsYzExtra": {
+  "value": 3,
+  "tex": "three",
+  "source": "paper/figures/src/fig_programs_facts.json"
+ },
+ "ExRandomInputs": {
+  "value": 20,
+  "tex": "20",
+  "source": "paper/figures/src/make_fig_example.py (N_RANDOM)"
+ },
+ "ExQdgWrong": {
+  "value": 20,
+  "tex": "20",
+  "source": "paper/figures/src/fig_example_facts.json"
+ },
+ "ExDuFidelity": {
+  "value": 0.0,
+  "tex": "0.00",
+  "source": "paper/figures/src/fig_example_facts.json"
+ },
+ "GcDepsBefore": {
+  "value": 11959,
+  "tex": "11{,}959",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcDepsNew": {
+  "value": 42,
+  "tex": "42",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcDepsNewPct": {
+  "value": 0.0035119993310477465,
+  "tex": "0.35\\%",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcDepsNewEntangled": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/gt_convergence/new_deps.csv"
+ },
+ "GcInputs": {
+  "value": 51,
+  "tex": "51",
+  "source": "icpc/gt_convergence.py (11 + 30 product + 10 entangled)"
+ },
+ "GcEntangledInputs": {
+  "value": 10,
+  "tex": "ten",
+  "source": "icpc/gt_convergence.py (N_ENTANGLED)"
+ },
+ "GcPerturbations": {
+  "value": 8,
+  "tex": "eight",
+  "source": "icpc/gt_convergence.py (2 + 6)"
+ },
+ "GcPrecisionLc": {
+  "value": 0.9255284117172364,
+  "tex": "0.926",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcRecallShiftLc": {
+  "value": 0.0,
+  "tex": "0.000",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcPrecisionYz": {
+  "value": 0.8369185977170046,
+  "tex": "0.837",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcRecallShiftYz": {
+  "value": 0.0,
+  "tex": "0.000",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcPrecisionCpdg": {
+  "value": 0.9642974642000806,
+  "tex": "0.964",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcRecallShiftCpdg": {
+  "value": 1.5330651491396452e-05,
+  "tex": "0.000",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcPrecisionQ": {
+  "value": 0.9729261868229325,
+  "tex": "0.973",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "GcRecallShiftQ": {
+  "value": 0.001533649173955376,
+  "tex": "0.002",
+  "source": "results/icpc/gt_convergence/pairs.csv"
+ },
+ "YzRoUnsound": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRoUnsoundCircuits": {
+  "value": 3,
+  "tex": "3",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRoSize": {
+  "value": 0.7723149515265244,
+  "tex": "77.2\\%",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRoRecall": {
+  "value": 0.9819672084489849,
+  "tex": "0.982",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRoMissed": {
+  "value": 502,
+  "tex": "502",
+  "source": "results/icpc/qpdg_ro/rq1_misses.csv"
+ },
+ "YzRoMissedKick": {
+  "value": 314,
+  "tex": "314",
+  "source": "results/icpc/qpdg_ro/rq1_misses.csv"
+ },
+ "YzRofUnsound": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRofUnsoundCircuits": {
+  "value": 3,
+  "tex": "3",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRofSize": {
+  "value": 0.7618662427892549,
+  "tex": "76.2\\%",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRofRecall": {
+  "value": 0.9819672084489849,
+  "tex": "0.982",
+  "source": "results/icpc/qpdg_ro/rq1_records.csv"
+ },
+ "YzRofMissed": {
+  "value": 502,
+  "tex": "502",
+  "source": "results/icpc/qpdg_ro/rq1_misses.csv"
+ },
+ "YzRofMissedKick": {
+  "value": 314,
+  "tex": "314",
+  "source": "results/icpc/qpdg_ro/rq1_misses.csv"
+ },
+ "YzRoContain": {
+  "value": 0.94901547116737,
+  "tex": "94.9\\%",
+  "source": "results/icpc/qpdg_ro/rq3_records.csv"
+ },
+ "CcFamilies": {
+  "value": 93,
+  "tex": "93",
+  "source": "results/icpc/cluster_ci/summary.json"
+ },
+ "CcCpdgUnsound": {
+  "value": [
+   0.16797304106827915,
+   0.3513520979543079
+  ],
+  "tex": "17\\% to 35\\%",
+  "source": "results/icpc/cluster_ci/summary.json"
+ },
+ "CcLcSize": {
+  "value": [
+   0.6314958659453839,
+   0.7751571693277465
+  ],
+  "tex": "63\\% to 78\\%",
+  "source": "results/icpc/cluster_ci/summary.json"
+ },
+ "CcHThree": {
+  "value": [
+   0.40797833547833545,
+   0.6805978568436215
+  ],
+  "tex": "41\\% to 68\\%",
+  "source": "results/icpc/cluster_ci/summary.json"
+ },
+ "CcHFour": {
+  "value": [
+   -0.1988546105277272,
+   -0.07545556899222323
+  ],
+  "tex": "\\ensuremath{-}19.9 to \\ensuremath{-}7.5",
+  "source": "results/icpc/cluster_ci/summary.json"
+ },
+ "SizeCtlCpdgRandom": {
+  "value": 0.6071286056354468,
+  "tex": "60.7\\%",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlCpdgGain": {
+  "value": 0.18119769534908203,
+  "tex": "18.1",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlCpdgGainCi": {
+  "value": [
+   0.13587635962941969,
+   0.22561920154109283
+  ],
+  "tex": "13.6 to 22.6",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlLcRandom": {
+  "value": 0.7820290305184898,
+  "tex": "78.2\\%",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlLcGain": {
+  "value": 0.1748978330539432,
+  "tex": "17.5",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlLcGainCi": {
+  "value": [
+   0.1323437695205447,
+   0.2180877954625059
+  ],
+  "tex": "13.2 to 21.8",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlYzRandom": {
+  "value": 0.8400960047715653,
+  "tex": "84.0\\%",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlYzGain": {
+  "value": 0.13370849593166956,
+  "tex": "13.4",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlYzGainCi": {
+  "value": [
+   0.08607395259926794,
+   0.18708872174959876
+  ],
+  "tex": "8.6 to 18.7",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlQRandom": {
+  "value": 0.6239335252556545,
+  "tex": "62.4\\%",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlQGain": {
+  "value": 0.19779643255025262,
+  "tex": "19.8",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlQGainCi": {
+  "value": [
+   0.15320578178659816,
+   0.2534915056646878
+  ],
+  "tex": "15.3 to 25.3",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlDuRandom": {
+  "value": 0.5918883569549419,
+  "tex": "59.2\\%",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlDuGain": {
+  "value": 0.18114258537979788,
+  "tex": "18.1",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "SizeCtlDuGainCi": {
+  "value": [
+   0.13503233300352602,
+   0.2255487969522506
+  ],
+  "tex": "13.5 to 22.6",
+  "source": "results/icpc/rq3_size_control/summary.json"
+ },
+ "MbflAllN": {
+  "value": 223,
+  "tex": "223",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamAll": {
+  "value": 0.320464780241878,
+  "tex": "0.320",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedAll": {
+  "value": 1.8878923766816142,
+  "tex": "1.9",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamDu": {
+  "value": 0.47106419545999784,
+  "tex": "0.471",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedDu": {
+  "value": 1.8295964125560538,
+  "tex": "1.8",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamCpdg": {
+  "value": 0.46970935094961874,
+  "tex": "0.470",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedCpdg": {
+  "value": 1.8295964125560538,
+  "tex": "1.8",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamLc": {
+  "value": 0.3938589157169063,
+  "tex": "0.394",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedLc": {
+  "value": 1.8878923766816142,
+  "tex": "1.9",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamYz": {
+  "value": 0.36863469824724027,
+  "tex": "0.369",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedYz": {
+  "value": 1.8878923766816142,
+  "tex": "1.9",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExamQ": {
+  "value": 0.440424703201119,
+  "tex": "0.440",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedQ": {
+  "value": 1.7802690582959642,
+  "tex": "1.8",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedMin": {
+  "value": 1.7802690582959642,
+  "tex": "1.8",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflAllExaminedMax": {
+  "value": 1.8878923766816142,
+  "tex": "1.9",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "MbflQRecomputedDiffers": {
+  "value": 2,
+  "tex": "2",
+  "source": "results/icpc/mbfl/units_all_rules.csv"
+ },
+ "QRepeatPairs": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/q_repeat/pairs.csv"
+ },
+ "QRepeatRuns": {
+  "value": 3,
+  "tex": "three",
+  "source": "icpc/q_repeat.py (REPEATS)"
+ },
+ "YzFigSliceProb": {
+  "value": 0.5,
+  "tex": "1/2",
+  "source": "results/icpc/yz_listings/fig1.json"
+ },
+ "CpdgMissControlPct": {
+  "value": 0.9968494013862634,
+  "tex": "99.7\\%",
+  "source": "results/icpc/cpdg/rq1_misses.csv"
+ },
+ "YzLcExcessRatio": {
+  "value": 2.733304573899268,
+  "tex": "2.7",
+  "source": "results/icpc/rq1/records.csv"
+ },
+ "GateSignalN": {
+  "value": 21,
+  "tex": "21",
+  "source": "results/icpc/gate_signal/summary.json"
+ },
+ "GateSignalBoth": {
+  "value": 21,
+  "tex": "21",
+  "source": "results/icpc/gate_signal/summary.json"
+ },
+ "NestPairs": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestDInQdg": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestQdgInQpdg": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestQpdgPairs": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestDEqQdg": {
+  "value": 559,
+  "tex": "559",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestQdgEqQpdg": {
+  "value": 497,
+  "tex": "497",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestDSound": {
+  "value": 784,
+  "tex": "784",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestDUnsound": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestViolations": {
+  "value": 0,
+  "tex": "0",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "NestDEqQpdg": {
+  "value": 426,
+  "tex": "426",
+  "source": "results/icpc/nesting/pairs.csv"
+ },
+ "NestQpdgLarger": {
+  "value": 287,
+  "tex": "287",
+  "source": "results/icpc/nesting/summary.json"
+ },
+ "SubjACount": {
+  "value": 158,
+  "tex": "158",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjATraced": {
+  "value": 158,
+  "tex": "158",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjAMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjAMaxQubits": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjAMedianOps": {
+  "value": 14.0,
+  "tex": "14",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjAMaxOps": {
+  "value": 126,
+  "tex": "126",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenCount": {
+  "value": 119,
+  "tex": "119",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenTraced": {
+  "value": 119,
+  "tex": "119",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenMinQubits": {
+  "value": 2,
+  "tex": "2",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenMaxQubits": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenMedianOps": {
+  "value": 19,
+  "tex": "19",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjGenMaxOps": {
+  "value": 2119,
+  "tex": "2{,}119",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepCount": {
+  "value": 22,
+  "tex": "22",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepTraced": {
+  "value": 22,
+  "tex": "22",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepMinQubits": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepMaxQubits": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepMedianOps": {
+  "value": 26.5,
+  "tex": "26",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjSweepMaxOps": {
+  "value": 104,
+  "tex": "104",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLCount": {
+  "value": 55,
+  "tex": "55",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLTraced": {
+  "value": 55,
+  "tex": "55",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLMinQubits": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLMaxQubits": {
+  "value": 20,
+  "tex": "20",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLMedianOps": {
+  "value": 120,
+  "tex": "120",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLMaxOps": {
+  "value": 783,
+  "tex": "783",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbCount": {
+  "value": 169,
+  "tex": "169",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbTraced": {
+  "value": 164,
+  "tex": "164",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbMinQubits": {
+  "value": 11,
+  "tex": "11",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbMaxQubits": {
+  "value": 10000,
+  "tex": "10{,}000",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbMedianOps": {
+  "value": 550.5,
+  "tex": "550",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQbMaxOps": {
+  "value": 5843491,
+  "tex": "5.8~million",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsCount": {
+  "value": 151,
+  "tex": "151",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsTraced": {
+  "value": 111,
+  "tex": "111",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsMaxQubits": {
+  "value": 20,
+  "tex": "20",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsMedianOps": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsMaxOps": {
+  "value": 84000,
+  "tex": "84{,}000",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjBugsMedianLines": {
+  "value": 15,
+  "tex": "15",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextCount": {
+  "value": 72,
+  "tex": "72",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextTraced": {
+  "value": 60,
+  "tex": "60",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextMaxQubits": {
+  "value": 13,
+  "tex": "13",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextMedianOps": {
+  "value": 8.0,
+  "tex": "8",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextMaxOps": {
+  "value": 4204,
+  "tex": "4{,}204",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjTextMedianLines": {
+  "value": 90.5,
+  "tex": "90",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqCount": {
+  "value": 7568,
+  "tex": "7{,}568",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqTraced": {
+  "value": 4182,
+  "tex": "4{,}182",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqMaxQubits": {
+  "value": 4096,
+  "tex": "4{,}096",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqMedianOps": {
+  "value": 8.0,
+  "tex": "8",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqMaxOps": {
+  "value": 200000,
+  "tex": "200{,}000",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjLintqMedianLines": {
+  "value": 58.0,
+  "tex": "58",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheCount": {
+  "value": 151,
+  "tex": "151",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheTraced": {
+  "value": 78,
+  "tex": "78",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheMaxQubits": {
+  "value": 11,
+  "tex": "11",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheMedianOps": {
+  "value": 3.0,
+  "tex": "3",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheMaxOps": {
+  "value": 122,
+  "tex": "122",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjQheMedianLines": {
+  "value": 9,
+  "tex": "9",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamCount": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamTraced": {
+  "value": 18,
+  "tex": "18",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamMinQubits": {
+  "value": 9,
+  "tex": "9",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamMaxQubits": {
+  "value": 10000,
+  "tex": "10{,}000",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamMedianOps": {
+  "value": 2980.5,
+  "tex": "2{,}980",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamMaxOps": {
+  "value": 181200,
+  "tex": "181{,}200",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjParamMedianLines": {
+  "value": 12.0,
+  "tex": "12",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfCount": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfTraced": {
+  "value": 10,
+  "tex": "10",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfMinQubits": {
+  "value": 3,
+  "tex": "3",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfMaxQubits": {
+  "value": 4,
+  "tex": "4",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfMedianOps": {
+  "value": 18.0,
+  "tex": "18",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfMaxOps": {
+  "value": 37,
+  "tex": "37",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SubjCfMedianLines": {
+  "value": 12.0,
+  "tex": "12",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeAMinQubits": {
+  "value": 1,
+  "tex": "1",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeAMaxQubits": {
+  "value": 14,
+  "tex": "14",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeAMaxOps": {
+  "value": 126,
+  "tex": "126",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeBugsFiles": {
+  "value": 151,
+  "tex": "151",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeTextFiles": {
+  "value": 72,
+  "tex": "72",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeLintqFiles": {
+  "value": 7568,
+  "tex": "7{,}568",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "SizeQheFiles": {
+  "value": 151,
+  "tex": "151",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "StudyCircuits": {
+  "value": 354,
+  "tex": "354",
+  "source": "results/icpc/corpus_sizes.json"
+ },
+ "StudyFaultUnits": {
+  "value": 5705,
+  "tex": "5{,}705",
+  "source": "results/icpc/rq3/records.csv + results/icpc/source_map/units.csv"
+ }
+}

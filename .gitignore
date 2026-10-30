@@ -1,0 +1,38 @@
+.venv/
+__pycache__/
+data/QASMBench-master/
+figures/out/
+
+# Corpus L download (fetched, not versioned)
+data/qasmbench/medium/
+data/qasmbench/large/
+# RQ3 per-circuit checkpoints (final results are in results/icpc/rq3/)
+experiments/results/icpc/rq3/partial/
+paper/main.pdf
+
+# local only, not part of the anonymous package: personal tooling, working notes and earlier material
+tools/save_to_rp.py
+tools/rp_project_id.txt
+paper/Qdg_*
+CHECKPOINT_B.md
+FOUNDATIONS_REVIEW.md
+JOURNAL.md
+PAPER_BLUEPRINT.md
+PAPER_OUTLINE.md
+REVIEW_CHECKLIST.md
+TOOL_PLAN.md
+VERIFY_CORRECTED.md
+archive/
+phase1_checks/
+phase1_logs/
+
+# LaTeX build files (they record local paths)
+*.aux
+*.log
+!experiments/logs/**/*.log
+*.fls
+*.fdb_latexmk
+*.blg
+*.bbl
+*.synctex.gz
+build/

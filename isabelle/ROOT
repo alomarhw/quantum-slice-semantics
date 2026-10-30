@@ -1,0 +1,5 @@
+session SliceSoundness = HOL +
+  sessions
+    "HOL-Library"
+  theories
+    SliceSoundness

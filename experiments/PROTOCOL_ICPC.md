@@ -1,0 +1,1399 @@
+# Pre-registered protocol for the ICPC 2027 extensions
+
+This protocol extends `PROTOCOL.md` and `PROTOCOL_RQ5.md`. Their choices stand unless this file says
+otherwise:
+- environment, preparation, oracle and statistics helpers;
+- ε = 1e-6 on the criterion's Uhlmann fidelity;
+- corpus A = 158 circuits and 784 (circuit, qubit) pairs.
+
+It is committed **before** any experiment below is run and before any code it names exists in final
+form. Development uses only debugging runs on at most 3 corpus-A circuits plus the synthetic examples
+named in §8, and their outputs are deleted. Each full run is executed once and reported as produced.
+
+Any later change goes in a dated "Deviations (ICPC)" section at the end of this file, with its
+reason, and must say whether any result of the affected experiment had been seen.
+
+The corrected run's results (`results/method_primary`, `results/rq4_ablation`,
+`results/rq5_scalability`) are reused as they are. They regenerate byte for byte
+(`../phase1_logs/regenerate_rq1_rq4.log`). Nothing here re-runs or replaces them.
+
+Author decisions recorded on 2026-10-20:
+- robustness runs on all 784 pairs;
+- ε stays 1e-6 everywhere;
+- the study has four research questions;
+- the LLM study (§6) is **planned**. T1 is required; T2 may be dropped by 2026-10-31 with the reason
+  reported (author decision 2026-10-21, approving `../PAPER_BLUEPRINT.md`);
+- H4's non-inferiority margin is 0.05 (confirmed 2026-10-21);
+- the archived submission stays byte-identical;
+- hardware is decided after Correction 4 is computed (§7).
+
+## 0. Research questions
+
+| RQ | Question | Status |
+|---|---|---|
+| RQ1 | Which dependence definitions capture the true quantum and classical dependences of a qubit, and so give sound backward slices on real benchmark circuits? | confirmatory (H1); descriptive dependence ground truth (§2.1) and dependence catalogue (§2.2) |
+| RQ2 | How much smaller than the light cone are the slicer slices, and when do they stay valid? | confirmatory (H2, H3); descriptive per family, criterion size, and on larger circuits (corpus L, §3.5) |
+| RQ3 | Does slicing help localize faults, by hand and with an LLM? | confirmatory (H4, H5); descriptive C-Q4, MBFL comparison, and the LLM tasks T1 and T2 (§6) |
+| RQ4 | What does the slicer cost end to end, against width and depth? | descriptive, including graph size (§8) and the larger corpus L (§3.5) |
+| Discussion | What does a developer see when running a slice on a noisy device? | descriptive: noisy simulation (§7.2) and the corrected hardware result (§7.1) |
+
+## 1. Slicers (RQ1–RQ3)
+
+All slicers are judged only through `common/evaluate.py::materialise` and the exact oracle.
+
+| Id | Slicer | Source |
+|---|---|---|
+| S-du | Genuine def-use port | `qdg.py::naive_classical_backward_slice`, unchanged. A controlled gate reads its controls and targets and writes its targets. |
+| S-lc | Wire light cone with classical control | the corrected run's causal slicer: `QDGControlFixed` without ENTANGLEMENT edges, `backward_slice`, unchanged |
+| S-lcq | Qiskit `LightCone` | `qiskit.transpiler.passes.LightCone` (qiskit 2.3.0): the union, over P ∈ {X, Y, Z}, of the instructions kept by `LightCone(bit_terms=P, indices=[t])`. Mapped back to instruction positions. The union over the three Paulis is what preserves the full reduced state. The Z-only cone is reported descriptively. |
+| S-yz | Re-implementation of Yu & Zhao's QPDG slicing [27] | new `slicers/yuzhao.py`: backward reachability over entanglement, measurement and classical edges as [27] defines them. Every interpretation choice is logged at the top of the file before the run. No-cloning and temporal dependence are omitted, because [27] does not define them operationally. |
+| S-q | the slicer | `qdg.py::entanglement_pruned_slice` on `QDGControlFixed`, unchanged (`sep_eps` = 1e-9) |
+| S-qW | the slicer, set criterion | new: the same algorithm with criterion W (a set of qubits). Mutual information is I(W; x) and verification uses the joint reduced state ρ_W. It is identical to S-q when \|W\| = 1, and this is checked on all 784 pairs before the run. |
+| S-4e | Four-edge slicer (ablation) | `fouredge/src`. The measured-criterion fix: a criterion on a measured qubit is seeded from that qubit's last non-measurement operation. Results are reported **before and after** the fix. The unfixed results are the existing `results/rq4_ablation`. |
+
+The four-edge `CAUSAL_CONE` variant (UED+ED, no MD/CD) is **not** a light cone and is never reported
+under that name.
+
+## 2. RQ1: soundness of dependence definitions
+
+- **Corpus:** corpus A, 784 pairs.
+- **Metrics per slicer:**
+  - invalid-slice rate under the oracle;
+  - mean criterion fidelity;
+  - per-corpus and per-dynamic breakdowns.
+- **LightCone cross-check:** for each pair, whether S-lcq and S-lc select the same instruction set.
+  - Report the agreement rate and list every disagreement with its cause.
+  - If `LightCone` raises on a circuit (for example on `if_else`), record it as "not applicable",
+    not as a disagreement.
+  - S-lcq is also judged by the oracle.
+- **Four-edge fix:** SVR of S-4e the slicer-full before and after the fix, on the 962 ablation pairs. The
+  ablation table is reported again with the fixed slicer.
+- **H1:** S-q is invalid on fewer pairs than S-du. Exact McNemar test, as in the corrected run, now
+  part of the confirmatory family.
+
+### 2.1 Dependence ground truth: which operations really influence the criterion
+A slice can be sound for the whole end state yet still miss, or wrongly include, individual
+dependences. This section measures dependences one operation at a time, against a semantic ground
+truth that no slicer computes.
+
+- **Semantic influence:** operation o_k influences criterion qubit q iff inserting a perturbation
+  right after o_k, on o_k's qubits, changes q's exact end-of-circuit reduced state (fidelity < 1 − 1e-6)
+  for at least one input. This is the quantum analogue of semantic dependence in classical slicing
+  theory (Podgurski and Clarke), cited as such.
+  - **Inputs:** |0…0⟩ plus 10 Haar-random product inputs (seed 20261023).
+  - **Perturbations:** for each (o_k, input), 2 independent Haar-random single-qubit unitaries on
+    each qubit of o_k.
+  - **Measurements:** a measurement o_k is perturbed in two ways, and influences q if either
+    changes ρ_q:
+    1. the quantum part: the same perturbation on the measured qubit right after the measurement;
+    2. the classical part: the recorded outcome is inverted for every later `if_else` that reads the
+       bit. A single-bit condition `c == v` becomes `c == 1 − v`; a register condition compares
+       against the value with that bit flipped.
+  - Computed by the oracle only, for all qubits of each circuit at once.
+- **Corpus:** corpus A, every (circuit, qubit) pair. Circuits whose influence computation exceeds the
+  limits in §8 are excluded and listed.
+- **Metrics per slicer (S-du, S-lc, S-lcq, S-yz, S-q, S-4e full):**
+  - **dependence recall** = |slice ∩ influencing| / |influencing|;
+  - **dependence precision** = |slice ∩ influencing| / |slice|;
+  - both as means over pairs, and the fraction of pairs with recall = 1.
+- **Classification of every missed dependence**, i.e. an influencing operation outside the slice.
+  - By no-signalling, any influence on q arrives through some later gate that acts on q.
+  - The category says how q takes part in that gate, so it separates what classical def-use can see
+    from what it cannot.
+  - It is assigned by a fixed rule over the dependence paths from o_k to q (in order, the first that
+    applies):
+    1. **same-wire:** o_k acts on q;
+    2. **feedback:** every path from o_k to q passes a measurement → condition edge;
+    3. **written-operand:** some path enters q through a gate that *writes* q under def-use (q is a
+       target, or an operand of a non-controlled multi-qubit gate such as SWAP or RZZ);
+    4. **kickback:** every path enters q only through controlled gates in which q is a *control*.
+       This is the quantum dependence that a def-use port cannot represent.
+
+  Report a table of missed dependences per slicer × category. This is the evidence for the
+  framing: which dependence definition misses which kind of dependence.
+- **Expected by theory, checked, not assumed:**
+  - S-lc and S-lcq have dependence recall 1 on every pair (no-signalling: influence needs a causal
+    path);
+  - S-du misses kickback dependences;
+  - S-q may miss an influencing operation only where the influence vanishes at |0…0⟩, which links
+    this result to the robustness result of §3.2.
+
+  Every deviation from these expectations is reported and explained.
+- **Pruning against influence:**
+  - the fraction of operations S-q removes that are non-influencing (correct prunes) vs influencing
+    (prunes valid only at |0…0⟩);
+  - for S-lc, the fraction of its operations that are non-influencing (the over-inclusion that
+    pruning targets).
+
+### 2.2 Dependence catalogue (golden tests)
+Hand-built circuits, each isolating one dependence kind. Each circuit starts with the preparations
+that make its dependence non-trivial, such as H on the qubits whose measurement outcome or control
+value should be random. The exact circuits are fixed in the test file below. The **expected slice of every slicer and
+the expected influence set (§2.1)** are written into `tests/dependence_catalogue.py` and committed
+**before** any slicer is run on them. A disagreement is reported. It is never fixed by editing the
+expectation, unless the expectation is shown to be wrong by the oracle, and that is logged as a
+deviation.
+
+| Id | Dependence kind | Circuit (criterion in bold) |
+|---|---|---|
+| K1 | data, same wire | H **q0**; X **q0** |
+| K2 | control → target | H q0; CX(q0 → **q1**) |
+| K3 | phase kickback, target → control | X q1; H q1; H **q0**; CX(**q0** → q1) (the control's state changes) |
+| K4 | symmetric controlled phase | H q0; H q1; CZ(**q0**, q1) with a phase gate before it on q1 |
+| K5 | partner's history reaches the control through entanglement | H q0; RY(θ) q1; CX(**q0**, q1). Criterion **q0**: RY on q1 changes q0's reduced state (coherence lost to the partner), a kickback-category dependence |
+| K6 | no-signalling: partner after its last interaction | H q0; CX(q0, q1); X q1; RZ q1. Criterion **q0**: the operations on q1 after the CX do **not** influence it |
+| K7 | SWAP moves state | RY q1; SWAP(**q0**, q1) |
+| K8 | entangle, disentangle, re-entangle | CX(**q0**, q2); CX(**q0**, q2); CX(**q0**, q1), as in the paper's worked example |
+| K9 | indirect (chained) entanglement | CX(q2, q1); CX(q1, **q0**); uncompute CX(q2, q1) |
+| K10 | uncomputation U … U† | U(q1, q2); CX(q1, **q0**); CX(q1, **q0**); U†(q1, q2) |
+| K11 | mid-circuit measurement of a partner, no feedback | H q0; CX(q0, q1); measure q1. Criterion **q0** is unchanged by non-selective measurement |
+| K12 | measurement + classical feedback | H q1; measure q1 → c; if (c = 1) X **q0** (MD + CD) |
+| K13 | teleportation | the standard circuit; criterion **Bob's qubit** depends on Alice's preparation through MD + CD |
+| K14 | overwritten classical bit | measure q1 → c; measure q2 → c; if (c = 1) X **q0**. Only the second measurement is a dependence |
+| K15 | reset of a partner after the interaction | H q0; CX(q0, q1); reset q1. Criterion **q0** is unchanged |
+| K16 | register condition (multi-bit) | measure q1 → c[0]; measure q2 → c[1]; if (c = 3) X **q0** |
+| K17 | GHZ partial uncompute | GHZ on q0–q3; uncompute q2, q3; criterion **q0** |
+| K18 | textbook kickback without entanglement (Deutsch) | X q1; H q0; H q1; oracle U_f as CX(q0 → q1) (balanced f); H **q0**. Criterion **q0**: the oracle's information reaches the control as a phase. The state stays a product, so no entanglement is involved. |
+| K19 | textbook Bell pair | H q0; CX(q0 → **q1**) and the symmetric criterion **q0** |
+
+**Scope of the no-signalling negatives.** K6, K11 and K15 are negatives for the **unconditional**
+reduced state ρ_q, which averages over every mid-circuit measurement outcome. A developer who
+post-selects on a partner's outcome sees a conditional state that does depend on that measurement.
+That is outside this criterion, and the paper says so.
+
+Report one table: kinds × slicers, each cell = sound / misses the dependence / over-includes. This
+table is the paper's comparison of dependence definitions.
+
+**Scope of classical control.** The corpora are OpenQASM 2, so classical control is `if` on bits and
+registers. Qiskit control flow beyond `if_else` (`while_loop`, `for_loop`, `switch_case`) is out of
+scope for the circuit-level slicers and the oracle. Bugs4Q programs that need it are excluded with
+that reason (§4.1). Classical dependences in the *Python* program that builds a circuit (loops,
+index arithmetic, parameter computation) are the source-level layer of the srcSlice extension (plan
+§7). They are not part of this protocol.
+
+## 3. RQ2: precision beyond the light cone, and its limits
+
+### 3.1 Size (H2)
+- **Units:** the pairs of corpus A that are sound under both S-q and S-lc (the corrected run's
+  definition).
+- **Measures:**
+  - mean of (size S-lc − size S-q), with sizes as fractions of prepared instructions;
+  - bootstrap 95% CI (10,000 resamples, seed 42);
+  - Wilcoxon signed-rank test with rank-biserial effect size;
+  - the number of pairs where S-q is strictly smaller.
+- **Also:** the same against S-yz on pairs sound under both.
+- **H2:** S-q is smaller than S-lc. Effect sizes and CIs are the primary report.
+- **Fallback (limit R5):** the number and fraction of corpus-A pairs where S-q returns the
+  light cone unpruned because the circuit is non-unitary (mid-circuit measurement, reset, feedback),
+  per corpus. Size results are also reported with those pairs excluded.
+
+### 3.2 Robustness to inputs and parameters (H3)
+The question is whether a the slicer slice computed at |0…0⟩ stays sound for other inputs and
+parameters. The slice's instruction positions stay **fixed**; only the input or the parameters
+change.
+
+- **Units:** all 784 pairs of corpus A (author decision).
+  - On a pair where S-q equals S-lc, soundness holds by no-signalling, and the check verifies it.
+  - Results are reported for all 784 pairs **and** separately for the *pruned* pairs (S-q ⊊ S-lc).
+    The pruned subset is descriptive.
+- **Draws per pair (seed 20261021, one generator per regime):**
+  - **R-basis:** 100 uniformly random computational-basis inputs |x⟩, prepared by X gates
+    prepended to both the full circuit and the slice.
+  - **R-haar:** 100 Haar-random product inputs, with each qubit independently Haar-random, prepared
+    by a `U` gate per qubit prepended to both.
+  - **R-param:** 100 rebindings for circuits with at least one rotation angle. Every angle of every
+    parameterized gate (`rx`, `ry`, `rz`, `p`, `u*`, `cu*`, `crz`, `cp`, `rzz`, …) is redrawn
+    uniformly from [0, 2π) in both the full circuit and the slice, with the same values in both.
+    Input |0…0⟩.
+- **Soundness per draw:** oracle fidelity of the criterion ≥ 1 − 1e-6, prepared input or rebound
+  circuit vs the same for the slice. Dynamic circuits use the oracle's branching, as in corpus A.
+- **Measures per regime:**
+  - pair robustness = fraction of pairs sound on **all** 100 draws;
+  - draw robustness = fraction of all (pair, draw) checks that are sound;
+  - the same for S-lc, as a control that should be 1.000.
+- **H3:** pair robustness of S-q under R-haar is at least 0.95. This is the GO criterion in §9.
+  Report the exact value with a Wilson 95% CI, and say plainly that a lower value means pruning is
+  input-specific.
+
+### 3.2a Covariates (descriptive)
+Every size and robustness result is also broken down by standard circuit metrics:
+- width, depth, gate count, two-qubit gate count, distinct gates, and width × depth;
+- the number of entangling layers.
+
+A rank regression of the per-pair relative reduction (S-lc − S-q)/S-lc on these covariates reports
+whether the slicer's gain is explained by depth or entanglement structure alone. This analysis is
+descriptive and not a hypothesis test.
+
+### 3.3 Structure families (descriptive)
+Generated by a new `families/generate.py` with fixed seeds. The ground truth is known by construction:
+the set of operations that can affect the criterion's reduced state, derived symbolically per family
+and checked by the oracle.
+
+| Family | Construction | Sizes |
+|---|---|---|
+| F-ghz | GHZ preparation on n qubits, then uncompute the CX chain from k qubits | n ∈ {3,…,10}, k ∈ {1,…,n−2} |
+| F-w | W-state preparation on n qubits, then uncompute part of it | n ∈ {3,…,8} |
+| F-red | entangle → disentangle → re-entangle chains between the criterion and m partners | m ∈ {1,…,6}, 1–3 rounds |
+| F-int | interleaved indirect entanglement: q0–q1, q1–q2, then uncompute q0–q1 (and longer chains) | chain length 3–8 |
+| F-inv | U … U† uncomputation, with U a seeded random circuit on a subset | width 4–10, depth of U 2–20 |
+| F-depth | fixed width 8, random entangling layers with uncompute segments, depth swept | depth ∈ {10, 20, 40, 80, 160} × 5 seeds |
+
+Every qubit is a criterion. Per family report:
+- the invalid rate of every slicer;
+- size relative to S-lc;
+- **recall of removable operations** = |removed by S-q ∩ removable| / |removable|, where removable =
+  in S-lc but outside the ground-truth set;
+- the number of pairs where S-q is sound but not minimal.
+
+### 3.4 Criterion granularity (descriptive)
+On corpus A, compare S-qW for three kinds of criterion:
+- **single:** \|W\| = 1 (= S-q);
+- **pair:** W = {q_i, q_j} for every pair coupled by at least one two-qubit gate;
+- **measured:** W = the qubits measured in the raw circuit, only when \|W\| ≤ 6. Larger sets are
+  excluded and listed (a 2^\|W\| density matrix).
+
+Soundness for \|W\| > 1 is the Uhlmann fidelity of ρ_W ≥ 1 − 1e-6, computed with the oracle extended
+to joint reduced states. The extension is checked against `Statevector`/`partial_trace` on random
+unitary circuits before the run, in the same way as `tests/test_oracle.py`.
+
+Report: invalid rate, size relative to S-lc, and how much of S-q's reduction remains as \|W\| grows.
+
+### 3.5 Beyond the exact-evaluation caps: corpus L (descriptive)
+Corpus A stops at 14 qubits and 220 instructions. Corpus L tests soundness, size and cost on larger
+real circuits.
+
+- **Selection** (fixed now, from sizes only):
+  - every circuit in `qasmbench/` (full, after `fetch_data.py`), `mqtbench/` and `veriqbench/`
+    with 15–20 qubits and at most 1,000 instructions after the corpus-A preparation;
+  - de-duplicated by (name, qubits, instructions);
+  - sorted by (qubits, instructions, path);
+  - at most 40 per corpus, smallest first.
+
+  The selected list is written to `corpus_l.json` and committed **before** any slicer runs on it.
+- **Oracle:** the same algorithm, with the qubit limit raised from 16 to 20. Above 16 qubits the
+  branch limit is 64 (memory). The change is checked before the run: on random unitary circuits of
+  17–20 qubits it must agree with `Statevector` + `partial_trace` to 1e-12.
+- **Slicers:** S-du, S-lc, S-lcq, S-yz, S-q. Every qubit is a criterion.
+- **Limits:** 600 s wall time and 8 GiB resident memory per circuit, at most 2 concurrent. A slicer or
+  oracle run that hits a limit is reported as not completed, with the limit it hit. That is part of
+  the result.
+- **Report, per slicer:**
+  - completion rate;
+  - invalid rate;
+  - mean size relative to S-lc;
+  - S-q time and peak memory per circuit;
+  - the fallback count (§3.1).
+
+  §2.1 (dependence ground truth) and §3.2 (robustness) are not run on corpus L, because of cost.
+
+## 4. RQ3: fault localization (the comprehension RQ)
+
+No user study or debugging-task study with people is run. The paper says so (commitment R11).
+
+### 4.1 Faults
+- **Seeded mutants** (new `faults/mutate.py`). Every operator is cited to the tool that defines it,
+  and the paper's operator table has a provenance column.
+
+  | Id | Operator | Provenance |
+  |---|---|---|
+  | M-ins | gate insertion (a random 1-qubit gate from {x, y, z, h, s, t, sx}) | Muskit (Mendiluze et al., ASE 2021); QMutPy |
+  | M-del | gate deletion | Muskit; QMutPy |
+  | M-rep | gate replacement, same arity (1q↔1q from the set above; 2q from {cx, cz, cy, swap}) | Muskit; QMutPy |
+  | M-mins | measurement insertion (mid-circuit, on a random qubit, into a fresh classical bit) | QMutPy (Fortunato et al., ICSE 2022) |
+  | M-mdel | measurement deletion (non-terminal measurements only) | QMutPy |
+  | M-cts | swap control and target of a controlled gate | QuMu "Swap controls and controlled qubits" (Book Ch. 9, Table 9.1) |
+  | M-crm | control-gate removal (drop one control: ccx→cx, cx→x, cz→z, …) | QuMu "Control gate removal" |
+  | M-qsw | qubit-operand swap (re-target one operand of a multi-qubit gate to another qubit) | QuMu bridging fault ("a multi-qubit gate which connects wrong qubits", Ch. 9 p. 177) |
+  | M-ent | entanglement faults: force unentanglement (delete the H that feeds an entangling CX), entanglement corruption (move that H after the CX) | QuMu entanglement-fault family |
+  | M-par | parameter perturbation (+δ, δ uniform in [π/8, π]) | ours, labelled as such |
+
+  **Sampling:** for every corpus-A circuit and operator, up to 5 mutants drawn uniformly over valid
+  sites (seed 20261022). That is at most 158 × 10 × 5 = 7,900 mutants.
+
+  **Equivalent mutants are removed before any slicer runs.**
+  - Unitary circuits: equal operator up to global phase, `Operator.equiv`.
+  - Dynamic circuits: equal ρ_q for every qubit on |0…0⟩ and on 20 Haar product inputs.
+
+  The number removed is reported per operator.
+- **Real bugs:** Bugs4Q, https://github.com/Z-928/Bugs4Q, commit
+  `7a719839662f94614872d65f9e9fbcd07408437c` (Apache-2.0).
+  - **Inclusion:** the buggy and fixed versions both build a `QuantumCircuit` under qiskit 2.3.0,
+    with at most mechanical API updates (each logged per bug); at most 14 qubits and 220 instructions
+    after preparation; and the two circuits differ.
+  - Every candidate bug is listed with its inclusion decision and reason **before** any slicer is run
+    on it.
+  - **Stage and kind classification:** every candidate is classified by stage (input / operation /
+    output, after Huang and Martonosi) and as either *circuit-semantic* (the buggy and fixed circuits
+    differ in gates, operands, parameters, measurement or conditions) or *API/classical* (e.g. a
+    missing `.decompose()`, a wrong backend call, or a post-processing bug).
+    - RQ3 runs only on circuit-semantic bugs.
+    - The paper reports the counts of every class, so the share of real bugs that a circuit slicer
+      can address is itself a result.
+  - **Fault site:** the instructions that differ between the buggy and fixed circuits (an aligned
+    instruction diff).
+
+### 4.2 Criterion: what a developer can observe, and two oracles
+Both oracles are computed exactly from the buggy and fixed (or original) circuits only.
+- **Oracle Z (what a developer sees):** the qubits whose exact single-qubit Z-basis marginal differs
+  by more than 1e-6.
+- **Oracle ρ (full state):** the qubits whose reduced state ρ_q differs (fidelity < 1 − 1e-6).
+- **Outcome of each non-equivalent mutant,** after QuMu:
+  - **killed:** some qubit differs under oracle Z;
+  - **injured:** no qubit differs under Z, but some does under ρ (a phase-only change);
+  - **alive:** neither oracle sees a difference on the evaluated inputs.
+
+  Report the counts per operator.
+- **Units:**
+  - the primary analysis uses killed faults, with criteria the observable-wrong qubits under Z;
+  - a secondary analysis adds injured faults, with criteria from oracle ρ;
+  - alive faults are excluded and counted.
+- **Unit:** each (fault, observable-wrong qubit) pair.
+- **Slicing:** every slicer slices the **buggy** circuit, the program the developer has.
+
+### 4.3 Metrics per slicer (S-du, S-lc, S-yz, S-q; the full circuit as reference)
+- **Fault containment:**
+  - Does the slice contain a fault-site instruction?
+  - For a deletion, the fault site is the instructions immediately before and after the deletion
+    point on the deleted gate's qubits.
+- **Inspection cost:**
+  - slice size in instructions;
+  - an EXAM-style score: the rank of the first fault-site instruction, with the slice ordered by
+    descending position (latest first), divided by slice size;
+  - for Bugs4Q with the source map (§5), the same in lines of the Qiskit program.
+- **C-Q4 count:** units where the fault site is in S-lc but **not** in S-q, i.e. pruning removed the
+  faulty operation.
+  - Count it, and report its share among the units where S-lc contains the fault.
+  - **Remedy:** re-slice with S-qW, W = all observable-wrong qubits of that fault, and report how many
+    C-Q4 units it recovers.
+- **H4 (soundness costs nothing in containment):** containment of S-q ≥ that of S-lc minus 0.05. This
+  is a one-sided paired comparison: exact McNemar on discordant units plus the CI of the difference.
+  H4 holds if the CI's lower bound is above −0.05.
+- **H5 (precision helps inspection):** the inspection cost of S-q is lower than S-lc's, on units
+  contained by both. Wilcoxon signed-rank test with effect size and CI.
+- **Baselines besides the slicers:**
+  - **full circuit:** containment 1, cost = all instructions;
+  - **random equal-size subset:** for each unit, 100 random instruction sets of the S-q slice's size
+    (seed 20261024), giving expected containment and EXAM;
+  - **MBFL:** mutation-based fault localization as in Ishimoto et al. (EASE 2025):
+    - QMutPy-style mutants of the *buggy* circuit are run under oracle Z;
+    - instructions are ranked by the Ochiai suspiciousness formula over the units' observable
+      behaviour;
+    - EXAM is reported on the same scale;
+    - also reported: **slice-filtered MBFL**, the same ranking restricted to the S-q slice and to the
+      S-lc slice.
+- **EXAM, for comparability:** in addition to the in-slice EXAM above, report EXAM as Ishimoto et
+  al. define it: the fraction of all instructions examined, in rank order, before the first
+  fault-site instruction, under the best-, worst- and average-case tie policy.
+- **Breakdowns:** per mutation operator, per oracle outcome (killed / injured), per corpus, mutants
+  vs Bugs4Q.
+
+## 5. Qiskit source map (descriptive; dropped if not working by 2026-10-31)
+`qiskit_source_map.py` wraps `QuantumCircuit.append` while a Bugs4Q program builds its circuit, and
+records the creating file:line of every instruction. A slice is then shown as source lines. It is
+used only for the RQ3 inspection cost in lines and for one figure. If it is dropped, the paper says
+so.
+
+## 6. LLM tasks (RQ3; descriptive, with effect sizes and CIs)
+
+Two tasks with **objective** answers. Neither is in the confirmatory family.
+
+### 6.1 Models (author decision 2026-10-21: any Claude model, or any free model on the author's GPU)
+- **Claude:** `claude-opus-5-5`, `claude-sonnet-5-5` and `claude-haiku-5-5`, through the Anthropic
+  API. The exact model id returned by the API is logged.
+- **Open-weight, served locally on the author's GPU (vLLM or ollama):**
+  - **O-mid:** the largest Qwen2.5-Coder-Instruct (32B, 14B or 7B) that fits the GPU in bf16 or 8-bit;
+  - **O-small:** Qwen2.5-Coder-1.5B-Instruct, the small-model control (after d'Aloisio et al.'s
+    TinyLlama).
+
+  The size is chosen from GPU memory alone, before any run. The Hugging Face repo and revision hash
+  are recorded.
+- **Settings:** temperature 0 for the primary run (1 run). Temperature 0.8 (d'Aloisio et al.), 3 runs,
+  for the consistency analysis on a 50-item subset. Maximum output 2,048 tokens. No tools.
+
+### 6.2 Circuit presentation (fixed)
+- **Format:** OpenQASM 2 as produced by `qiskit.qasm2.dumps` of the prepared circuit.
+- **Indices:** every instruction line is suffixed with `// [k]`, its position in the full circuit.
+- **Slices:** a slice is shown as the sub-circuit with the original indices kept, so every answer is
+  in the same index space.
+
+### 6.3 T1: does the model know what affects a qubit?
+- **Items:**
+  - 200 corpus-A (circuit, qubit) pairs, sampled stratified by corpus (seed 20261025);
+  - all catalogue circuits (K1–K19).
+- **Prompt** (fixed, no tuning):
+  > "Here is a quantum circuit in OpenQASM 2. Each instruction ends with its index as `// [k]`.
+  > `<circuit>`
+  > Which instructions can affect the final quantum state of qubit q[`<t>`] (its reduced density
+  > matrix at the end of the circuit)? Answer with a JSON list of instruction indices and nothing else."
+- **Scoring:**
+  - precision, recall and F1 against the semantic-influence set of §2.1;
+  - also against S-lc, to separate "missed a real dependence" from "different but sound";
+  - an unparsable answer scores 0 recall and is counted.
+- **Report:** per model, per dependence kind (§2.1 categories: which kinds LLMs miss), and against the
+  slicers' recall and precision on the same items.
+
+### 6.4 T2: does a slice help the model localize a fault?
+- **Items:** up to 300 RQ3 units, sampled stratified by operator (seed 20261026), plus every
+  circuit-semantic Bugs4Q unit.
+- **Inputs per item**, with the circuit shown as the buggy circuit or one of its slices:
+  - (i) the full circuit;
+  - (ii) the S-lc slice;
+  - (iii) the S-q slice;
+  - (iv) the S-du slice, a negative control that may omit the fault.
+- **Prompt context:**
+  - **primary:** algorithm name (file stem) + qubit count, reusing d'Aloisio et al.'s context
+    prompt;
+  - **ablation:** no context, run for inputs (i) and (iii) only.
+- **Prompt** (fixed):
+  > "This quantum circuit has a bug: the measured distribution of qubit q[`<t>`] is wrong. `<context>`
+  > `<circuit>`
+  > Which instruction is most likely the faulty one? Answer with a JSON list of up to 3 instruction
+  > indices, most likely first, and nothing else."
+- **Scoring:**
+  - top-1 and top-3 hit on the fault site (§4.3 definition);
+  - prompt tokens;
+  - unparsable answers count as misses.
+- **Comparisons:**
+  - (iii) vs (i) and (iii) vs (ii): exact McNemar on top-3 hits per model, with the difference and its
+    CI;
+  - consistency: the agreement across the three temperature-0.8 runs.
+- **Budget:** one call per (model, item, input, context) in the primary run, about 6,000 calls in
+  total. The run stops, and is reported as partial, if API cost exceeds an amount the author fixes
+  before the run.
+
+### 6.5 Development and logging
+- **Format checks only:** prompts are checked for output format on 5 development items (catalogue
+  K1–K3 and two corpus-A circuits), which are excluded from scoring.
+- **No prompt changes after that check.**
+- **Logging:** every prompt, raw output, model id, timestamp and token count goes to
+  `results/llm/*.jsonl`.
+
+## 7. Noise and hardware
+
+### 7.1 Hardware (old RQ7)
+Correction 4 is computed in Phase 3. The two QAOA circuits are recomputed from the captured
+jobs, comparing the register the slice actually measures. The author then decides between:
+- one Discussion paragraph, stating that TVD is phase-blind;
+- dropping hardware.
+
+No hardware number is reported without that recomputation.
+
+### 7.2 Noisy simulation (descriptive)
+Slices are computed statically, so noise cannot change *which* operations a slice contains. What noise
+can change is whether running the slice tells a developer the same thing as running the full program.
+
+- **Environment:** a separate lock, `requirements_noise.lock` = `requirements.lock` +
+  `qiskit-aer==0.17.2` + `psutil==7.2.2` (checked installable on 2026-10-21).
+- **Circuits:** the corpus-A pairs with at most 10 qubits (density-matrix memory).
+- **Slices per pair:** S-lc and S-q.
+- **Noise model:**
+  - both the full circuit and each slice are transpiled to basis {`u`, `cx`} with
+    `optimization_level=0`;
+  - depolarizing error p1 on every `u` and p2 on every `cx`, with p2 ∈ {1e-3, 1e-2, 3e-2} and
+    p1 = p2/10;
+  - no readout error (the comparison is on reduced states).
+- **Simulation:** `AerSimulator(method="density_matrix")`, which handles mid-circuit measurement,
+  reset and `if_else`. The criterion's reduced state is ρ_q.
+- **Measures per (pair, slicer, level):**
+  - D_full = TD(ρ_q of the noisy full circuit, ρ_q ideal);
+  - D_slice = TD(ρ_q of the noisy slice, ρ_q ideal);
+  - D_cross = TD(noisy slice, noisy full).
+- **Report:**
+  - medians and 95th percentiles;
+  - the fraction of pairs with D_slice ≤ D_full;
+  - how D_cross grows with p2 and with the number of instructions the slice removes.
+
+  Descriptive only: this shows what a developer would see when running a slice instead of the full
+  circuit on a noisy device. It is not a claim about real hardware.
+
+## 8. RQ4: cost (descriptive)
+- **Measured:**
+  - S-q end to end: QDG build + mutual-information nomination + exact verification, for every
+    criterion;
+  - S-lc time;
+  - peak resident memory.
+- **Inputs:** F-depth (depth sweep at width 8), plus a width sweep (F-inv and F-ghz at widths 4–14).
+- **Limits and parallelism:** the same as `PROTOCOL_RQ5.md` (120 s, 4 GiB, 4 concurrent, a fresh
+  process per circuit). The machine is recorded in `machine.json`.
+- **Reported:** median, 95th percentile and maximum times; peak memory against width and against
+  depth; and completion rates.
+- **Graph size:** QDG nodes and edges by type (DATA, CONTROL, ENTANGLEMENT), against
+  operation count, width and depth, on the same inputs and on corpus A. This measures the claim that
+  the graph grows with the operations, not with superposition or amplitudes. The exponential cost is
+  only in the pruning check, which is reported separately above.
+- **Reused:** the existing structural (1,124 circuits) and end-to-end (corpus A) RQ5 results, labelled
+  structural vs end to end.
+
+**Synthetic examples allowed during development:**
+- the paper's worked examples (Bell; entangle–disentangle q0–q2; teleportation), which are also the
+  golden tests;
+- one small instance per family in §3.3.
+
+## 9. Statistics, multiple comparisons and GO/NO-GO
+
+**Confirmatory family:** H1–H5, with Holm correction at α = 0.05 across the five.
+- Effect sizes and CIs are reported first.
+- p-values below 1e-10 are written "p < 10⁻¹⁰".
+- Everything else is descriptive and is not tested for significance.
+
+**GO/NO-GO for Checkpoint B.** The author picks the framing; these are the recommendation rules,
+fixed now:
+
+| Recommendation | Condition |
+|---|---|
+| **GO-strong** | H2: the lower CI bound of the mean size reduction (S-lc − S-q) is > 0 and the relative reduction is ≥ 0.15, **and** H3: pair robustness under R-haar is ≥ 0.95, **and** S-q is invalid on 0 of 784 pairs |
+| **GO-empirical** | S-q is sound on corpus A, but the robustness condition or the size condition fails. Reframe as an empirical study of what sound slicing costs and when the extra precision holds; the light cone is the recommended practical slicer. |
+| **NO-GO (Research Track)** | S-q is unsound on corpus A at \|0…0⟩, or RQ3 cannot be run (fewer than 200 observable mutants). Consider the RENE or ERA track. |
+
+## 10. Exclusions and reporting
+- Every exclusion (load failure, oracle branch limit, not observable, LightCone not applicable,
+  Bugs4Q inclusion failure, Bugs4Q API/classical bug, equivalent or alive mutant, size cap, corpus-L
+  limit, noisy-simulation size cap, unparsable LLM answer) is written to an `excluded.json` with its
+  reason, and counted in the paper.
+- Results are reported whatever their direction:
+  - if pruning is input-specific;
+  - if S-yz or S-lcq differ from S-lc;
+  - if the slicer does not help fault localization.
+- Every number in the paper comes from `results/*.json` through the generated `paper/numbers.tex`.
+
+## 11. Terminology (binding for code, results and the paper)
+- **ρ_q** is the *unconditional* reduced density matrix of qubit q at the end of the circuit: the
+  partial trace over all other qubits, averaged over all mid-circuit measurement outcomes. It is in
+  general mixed. ρ_W is the same for a set W.
+- **"Product across the cut"** (ρ = ρ_A ⊗ ρ_B) replaces "separable", except in the textbook
+  mixed-state sense.
+- **"Test oracle"** is the exact reference simulator. It is never called a "quantum oracle", a term
+  reserved for U_f.
+- **Light cone (S-lc)** is the wire light cone *with classical control*. The four-edge `CAUSAL_CONE`
+  is not a light cone.
+- **TQDG** names our graph and **QPDG** names [27]'s. "Dynamic circuit" means a circuit with
+  mid-circuit measurement, reset or feedback.
+
+## Deviations (ICPC)
+
+### Deviation I-1 (2026-10-21, before any ICPC result): design corrections found while deriving the catalogue expectations
+These were found while deriving the catalogue's expected outcomes by hand. No ICPC experiment code had
+run, and no ICPC result existed.
+
+1. **§2.1, the perturbation.**
+   - *Was:* independent single-qubit Haar unitaries on each qubit of o_k.
+   - *Now:* **one Haar-random unitary on the joint space of o_k's qubits** (o_k acts on at most 8
+     qubits after preparation).
+   - *Reason:* a product of single-qubit unitaries cannot reveal a dependence carried by
+     entanglement. For example, q0 after the CX of a Bell pair is maximally mixed, so no local
+     unitary on q0 or q1 changes ρ_q0, and the CX would wrongly be labelled non-influencing. The
+     joint perturbation is the faithful analogue of Podgurski and Clarke's semantic dependence:
+     o_k influences q iff *some* operation in o_k's place would change ρ_q.
+2. **§2.1, the expectation for S-q.**
+   - *Was:* "S-q may miss an influencing operation only where the influence vanishes at |0…0⟩".
+   - *Why it is wrong:* the slicer removes operations whose effect *as written* is nil, and that can hold
+     for every input. In K4, an S gate before a CZ on the other wire commutes with the CZ, so it never
+     changes ρ_q0, yet a different gate there would.
+   - *Now:* S-q is expected to miss influencing operations whose as-written contribution is nil.
+3. **§2.1, an added descriptive measure.** **As-written contribution:** o_k contributes to q iff
+   deleting o_k alone changes ρ_q, at |0…0⟩ and at the same 10 Haar product inputs. Each pruning of
+   S-q is then classified as:
+   - a non-influencing removal;
+   - an influencing operation with no contribution at any tested input;
+   - an influencing operation that contributes at some input (an input-specific prune).
+
+   This separates *dependence* (what q could depend on: the right target for fault localization)
+   from *contribution* (what the slicer optimizes).
+4. **§1, the four-edge fix.**
+   - *Was:* "seeded from that qubit's last non-measurement operation".
+   - *Now:* **seeded from the criterion qubit's last operation of any kind.**
+   - *Reason:* a mid-circuit measurement or reset of the criterion qubit changes ρ_q and must be in
+     the slice. The original defect is that the slice was seeded *only* at measurement nodes, which
+     drops every later operation on the criterion qubit.
+5. **§1, the expectation for S-lcq.** Qiskit's `LightCone` drops gates that commute with the
+   backward-propagated observable, so its exact sets cannot be derived reliably by hand.
+   - **Catalogue expectation:** sound, and a subset of S-lc.
+   - Every catalogue entry where it is a strict subset is reported.
+   - On dynamic circuits the expectation is "not applicable, or sound and ⊆ S-lc".
+6. **§2.2, catalogue additions.** None of these changes an existing entry's circuit or criterion.
+   - **K6b:** K6 plus a later H on the criterion qubit.
+   - **K11b:** K11 plus a later H on the criterion qubit.
+
+     These are the only cases where a flow-insensitive entanglement dependence (S-yz) over-includes
+     no-signalling partner operations.
+   - **K17, a second criterion q1.** With q0 as the criterion, the partial uncompute is causally
+     irrelevant, because q0's last operation precedes it.
+   - **K20:** a measured-then-corrected criterion qubit (H q0; measure q0 → c; if c = 1: X q0). This
+     is the pattern behind the four-edge slicer's 5 unsound pairs.
+   - **K8:** an X on q2 is prepended as a preparation. The earlier version's worked example prunes CX(q0, q2),
+     which touches the criterion, but Sec. III's algorithm prunes only operations that do not touch
+     the criterion qubit. With the X q2 preparation, K8 exercises the algorithm as specified. The
+     paper's worked example is rewritten to match.
+
+### Deviation I-2 (2026-10-21, before any RQ3 result): cost limits found while implementing RQ3
+1. **§4.1, equivalent-mutant filtering.** `Operator.equiv` is used only when both circuits are
+   unitary and have at most 10 qubits. A 14-qubit operator is a 2^14 × 2^14 complex matrix (about
+   4 GB).
+   - Larger unitary circuits use the rule already specified for dynamic circuits: equal ρ_q for
+     every qubit, on |0…0⟩ and on 20 Haar product inputs.
+   - The rule used is recorded per mutant.
+2. **§4.3, MBFL.** It needs, per fault unit, (instructions × MBFL mutants × 21 test inputs) exact
+   simulations, so it runs on the same stratified sample as T2: up to 300 units, seed 20261026,
+   stratified by operator, plus every Bugs4Q unit. Every other RQ3 metric covers all units.
+   - Both decisions were taken from cost estimates alone, before any RQ3 code had run on corpus A.
+
+### Deviation I-3 (2026-10-21, before any LLM call): settings the current Claude API does not accept
+These were found while implementing §6, from the API documentation. No LLM call had been made.
+
+1. **Sampling (§6.1).**
+   - `claude-opus-5-5`, `claude-sonnet-5-5` and `claude-haiku-5-5` reject non-default sampling
+     parameters (`temperature`, `top_p`, `top_k`) with HTTP 400. For the Claude arms, *temperature 0*
+     and *temperature 0.8* cannot be set.
+   - Claude arms: default sampling, with effort fixed at **`medium`** for all three models via
+     `output_config.effort`. That is the default for Opus 5.5 and Haiku 5.5; Sonnet 5.5 defaults to
+     `high` and is set to `medium` for comparability.
+   - Primary run: 1 call per item. Consistency analysis: 3 calls per item on the 50-item subset, at
+     the same settings.
+   - Open-weight arms (vLLM): unchanged, temperature 0 primary and 0.8 × 3 for consistency.
+2. **Reasoning tokens (§6.1).** All three Claude models think adaptively. Opus 5.5 cannot disable
+   thinking, and thinking tokens count against `max_tokens`. A 2,048-token cap would truncate
+   answers, so `max_tokens` is **16,000** for the Claude arms. The open arms keep 2,048.
+   - Thinking text is not requested (`display` left at its default, "omitted") and is not scored.
+3. **Refusals.** The server-side refusal fallback is **not** enabled. It would let a different model
+   answer, which breaks the per-model comparison. `stop_reason == "refusal"` is recorded as a refusal
+   and scored as unparsable. Refusal counts are reported per model.
+4. **Answer parsing (§6.3, §6.4), fixed now.**
+   - First, the whole text response, stripped, is parsed with `json.loads`.
+   - If that fails, the **last** JSON array of integers in the text (regex `\[[0-9,\s]*\]`) is
+     parsed.
+   - Anything else is unparsable.
+   - Indices that are not instruction positions of the shown circuit are dropped and counted.
+5. **Circuit text (§6.2).** If the number of instruction lines in `qasm2.dumps` differs from the
+   number of instructions (so the `// [k]` labels cannot be placed exactly), the item is excluded and
+   listed.
+6. **Prices for the budget cap** (USD per 10^6 input / output tokens, Anthropic list price,
+   2026-10-06): Opus 5.5 4 / 20; Sonnet 5.5 2 / 10; Haiku 5.5 0.10 / 0.50. Cost is computed from
+   each response's `usage`.
+
+7. **Details §6 leaves open, fixed in `icpc/llm_tasks.py` before any call (2026-10-21).**
+   - **Qubit name.** The qubit is named as in the QASM text (register and index, e.g. `q[3]`).
+   - **Prompt wording.** The `// [k]` in the T1 prompt is sent with its backticks, as written in
+     §6.3.
+   - **Single-bit conditions.** Catalogue K12, K14 and K20 use single-bit conditions, which
+     OpenQASM 2 cannot write. They are shown with every classical bit in its own one-bit register.
+     The instructions and indices are the same; only the notation changes.
+   - **T1 sample.** The 200 pairs are allocated in proportion to each corpus's pairs, using largest
+     remainders. The two corpus-A development pairs are drawn from the remaining pairs with seed
+     20261025.
+   - **T2 sample.** Primary units only, since the prompt says the *measured* distribution is wrong.
+     30 per operator (all of them when there are fewer), seed 20261026.
+   - **Context string.** The words are those of d'Aloisio et al.'s context-aware prompt: "The name of
+     the algorithm is: <file stem>. The code includes <n> qubits."
+   - **Inserted-measurement register.** The extra register of an inserted measurement (M-mins) is
+     shown as `c_extra`, not `mut`.
+   - **Consistency subset.** 50 scored items per task, runs 1–3. T1 uses its single input. T2 uses
+     inputs (i) and (iii) with context.
+   - **Open-model seeds.** Open-arm runs 1–3 use seed = run number.
+   - **Call order.** Claude calls are ordered item-major in a seeded item order. A run stopped by the
+     cap therefore covers a random subset of items on every arm.
+   - **Scope of the cap.** The cap covers all Claude spend logged for the task, including the
+     development check.
+
+### Deviation I-4 (2026-10-21, AFTER the O-small T1 scored run): a sensitivity parser, added post hoc
+- **What happened.** O-small writes its index lists as strings, e.g. `["0", "1"]` or `["[17]", "[18]"]`.
+  Its 5 development items showed this. They were run in the same command chain as the scored runs,
+  and the output was not read before the scored and consistency runs started. This was a procedural
+  slip: §6.5 intends the format check to be inspected first.
+- **Primary stays frozen.** The Deviation I-3 item 4 rule is unchanged and remains primary
+  (`t1_scores.csv`). Under it, 23% of O-small's answers parse.
+  - The fallback of that rule reads `["[17]", "[18]"]` as `[18]`, the last inner integer list. Such
+    answers count as parsed, with a truncated answer.
+- **Sensitivity score (post hoc).** `score --lenient` writes `<task>_scores_lenient.csv` and is
+  applied identically to every arm. It uses `json.loads` first; otherwise it takes the last
+  top-level list whose elements are all indices, written as `7`, `"7"`, `[7]` or `"[7]"`.
+  - It is reported as sensitivity only, and labelled post hoc.
+  - O-mid and the Claude development answers are unaffected, since their answers are integer lists.
+- **The author decides** how O-small is reported: format failure as primary, with the sensitivity
+  score in the text.
+- **The prompt is not changed.**
+
+### Deviation I-5 (2026-10-21, author decision, before any scored Claude call): Opus dropped; budget cap
+- **Opus dropped.** The Claude arms are `claude-sonnet-5-5` and `claude-haiku-5-5`.
+  `claude-opus-5-5` is dropped for cost, and its 5 development-check calls stay logged but unscored.
+- **Budget cap (§6.4).** USD 60 in total, set by the author: T1 USD 15, T2 USD 45. The T1 cap counts
+  the USD 0.09 development check.
+
+### Deviation I-6 (2026-10-21, after the first RQ3 run crashed, before any RQ3 result was written)
+- **The crash.** The first full RQ3 run (`440d12d`) crashed after 7.5 h with `StopIteration` in
+  `exam_scores`. A mutant had an empty fault site. This happens when M-del or M-ent ("unentangle")
+  deletes the only instruction on its qubits: there is then no instruction before or after the
+  deletion point to mark as the fault site (§4.1).
+- **No outputs.** No output files were written, so no RQ3 result was seen.
+- **Rule added to §10.** Such mutants are excluded with the reason "empty fault site", recorded in
+  `mutants.csv` with `outcome = excluded`, and counted.
+- **Checkpointing.** The driver now writes a per-circuit checkpoint (`results/icpc/rq3/partial/`), so a
+  crash no longer loses completed circuits.
+- **Smoke test.** It was run on the same 3 debug circuits as before; its output was deleted.
+
+### Author decision on §7.1 (2026-10-21)
+- **Decision.** Hardware is kept as **one Discussion paragraph**.
+- **Numbers.** It reports only the Correction 4 numbers from
+  `results/icpc/hardware/hardware_tvd_corrected.csv`:
+  - 16/18 within δ = 0.05;
+  - the noise-free TVD, which is 0 for all 18;
+  - the QAOA gaps attributed to hardware noise.
+- **Caveats, stated in the text:**
+  - a Z-basis TVD is phase-blind;
+  - the slices came from the four-edge `QDG_FULL` variant;
+  - full and slice ran on different physical qubits.
+- **Excluded.** No hardware number enters an RQ or the abstract.
+
+### Author decision on Deviation I-4 (2026-10-21)
+- **Primary.** The frozen parser (Deviation I-3 item 4) is primary for every arm. All tables and
+  tests use `<task>_scores.csv`.
+- **Sensitivity.** The post-hoc parser (`<task>_scores_lenient.csv`) is reported next to O-small's
+  numbers only, labelled "post hoc (string indices accepted)". Its effect on the other arms is
+  stated in one sentence.
+- **The same rule applies to T2.**
+
+### Deviation I-7 (2026-10-22, before the family and noise runs; the corpus-L selection was committed at `ba56c1b`)
+1. **§3.3 ground truth.**
+   - **Change:** the set of operations that can affect each criterion is computed with the §2.1
+     semantic-dependence oracle (`icpc/influence.py`). It is not derived symbolically per family.
+   - **Why:** this is the paper's definition of ground truth. A hand derivation for six parameterized
+     families, two of them random, would add a second, error-prone definition.
+   - **Constructions:** they follow the §3.3 table and are written down in `families/generate.py`.
+     For F-w, "uncompute part of it" is fixed as undoing the last ⌊n/2⌋ preparation steps.
+2. **§3.5 corpus L.**
+   - **Memory limit:** resident memory is polled with `ps`, because `psutil` is not in
+     `requirements.lock`. Per-stage results are logged, so a run that hits a limit is attributed to
+     its stage.
+   - **Fallback:** counted with the slicer's own rule, namely that `Statevector(circuit)` fails.
+3. **§7.2 noise.**
+   - **Terminal measurements** are removed before the final density matrix is saved.
+   - **Measurement, reset or `if_else`:** a circuit that still contains one is simulated with 1,024
+     shots, and Aer's shot average serves as the unconditional state. That value is an estimate;
+     circuits without these operations are exact with one shot.
+   - **Seeds:** the simulator seed is derived from the circuit path.
+
+### Author decision on Deviation I-7 (2026-10-22)
+- **Decision:** the structure families keep the §2.1 semantic-dependence oracle as ground truth.
+- **Why:**
+  - one definition of "can affect the criterion" for the whole paper;
+  - it covers the two random families (F-inv, F-depth);
+  - it is the same oracle that checks every slice's soundness.
+- **The paper states** that family ground truth is computed by this oracle, not derived per family.
+
+### Deviation I-8 (2026-10-22, AFTER all T1 and T2 calls; author decision): answer-line parser primary
+- **Found.** The pre-registered parser (Deviation I-3 item 4) falls back to "the last integer list
+  anywhere in the text", and that fallback reads non-answers.
+  - Qwen2.5-Coder-1.5B often answers with an instruction's text, such as `["cx q[0],q[4]"]`. The
+    fallback reads the qubit reference `q[4]` as instruction 4.
+  - Claude Sonnet 5.5 sometimes ends with a list of strings, such as `["6", "10", "5"]`. The fallback
+    takes the last prose citation instead, such as "[5] is the next candidate".
+  - In T2 this changes 24% of Sonnet's answers and 25% of Qwen-1.5B's.
+  - These are measurement errors, not a strictness choice.
+- **New primary rule (`parse_answer_line`).**
+  - Apply `json.loads` to the reply with code fences removed.
+  - Otherwise, take the reply's last non-empty line with Markdown emphasis stripped. It counts only if
+    it is exactly a list whose elements are all indices (`7`, `"7"`, `[7]`, `"[7]"`).
+  - A bracket inside prose or an identifier never counts.
+  - The rule is applied identically to every arm and to both tasks.
+- **Agreement.** On every T1 and T2 answer of Haiku 5.5 and Qwen2.5-Coder-32B, and on every T1 answer
+  of Sonnet, the new rule gives the same answer as the pre-registered rule.
+- **Kept as sensitivity.** The pre-registered rule is reported as a labelled sensitivity analysis
+  (`<task>_scores_frozen.csv`). It supersedes the Deviation I-4 decision. `_lenient` files are kept for
+  the record.
+- **Effect on findings.** The main T2 finding has the same direction under both rules: S-q slices
+  lower top-3 fault localization against the full circuit and against S-lc, for Sonnet, Haiku and
+  Qwen-32B. Only the magnitudes change (e.g. Sonnet, full circuit: 0.84 vs 0.73).
+
+### Deviation I-9 (2026-10-23, AFTER the RQ1 run; author decision): S-lcq mapped back by order, not by labels alone
+- **Found.** `slicers/registry.py::_lightcone` labels each instruction, runs `LightCone`, and reads the
+  labels back. `LightCone` returns copies of QASM-defined gates (qasm2 `_DefinedGate`: `mcx`, `qft`,
+  oracles) without their labels. The RQ1 run therefore recorded 142 of its 184 "not applicable" S-lcq
+  pairs because of our wrapper, not because `LightCone` raised. §2 allows "not applicable" only when
+  the pass raises. The other 42 are the pass's own refusal (measurements with an observable).
+- **Change (`icpc/lcq_remap.py`).** The pass keeps an in-order subsequence of its input (it walks the
+  DAG in reverse topological order and re-applies kept nodes at the front). The output is aligned to
+  the input in order. Labelled instructions anchor. Unlabelled ones match an input instruction with
+  the same name, qubits, clbits and parameters between anchors. The alignment is computed
+  earliest-first and latest-first, and a pair whose two alignments differ is "ambiguous" and stays not
+  applicable. Scoring is unchanged (§2).
+- **Checked before the run.** On the 600 pairs the label mapping already handled, the new mapping
+  gives the identical S-lcq slice on all 600. It maps 132 of the other 184; 52 stay not applicable.
+- **Reporting.** The RQ1 S-lcq results (600 pairs) stay in `results/icpc/rq1` unchanged. The remapped
+  results go to `results/icpc/rq1_lcq_remap` and are primary for the LightCone cross-check; both are
+  reported. RQ1 code is not modified.
+- **Direction.** The change can only widen the baseline's coverage; it cannot make S-q look better.
+
+### Deviation I-10 (2026-10-23, before any S-lcq robustness result; author decision): RQ2 robustness of S-lcq
+- **Why.** §3.2 tests the robustness of S-lc and S-q only. The foundations review
+  (`FOUNDATIONS_REVIEW.md`) shows that Qiskit's `LightCone` (S-lcq) is smaller than S-lc on 243 of
+  732 pairs and never unsound at |0…0⟩. Whether it stays valid at other inputs decides whether it,
+  rather than S-lc, is the input-independent baseline the slicer must be compared with.
+- **Design (`icpc/rq2_robustness_lcq.py`).** The §3.2 regimes (R-basis, R-haar, R-param), draws (100),
+  seeds and soundness rule, imported unchanged from `icpc/rq2_robustness.py`, so every draw equals
+  the RQ2 run's. S-lcq uses the Deviation I-9 mapping and, like S-lc and S-q, is computed once at
+  |0…0⟩ on the circuit as written. Not-applicable pairs are recorded, not dropped silently.
+- **Reproduction check.** S-lc is re-run on the same draws. Its sound-draw counts must equal
+  `results/icpc/rq2_robustness` on every (pair, regime); a mismatch stops the analysis.
+- **Expectation stated before the run.** Commutation with the observable is input-independent, so
+  S-lcq should be robust under R-basis and R-haar. Under R-param, a gate may commute with the
+  observable only at its written angle (e.g. an angle of 0), so S-lcq may fail there.
+- **Reporting.** Descriptive; robust rate per regime, overall and for the pairs where S-lcq is
+  strictly smaller than S-lc. Not part of the confirmatory family.
+
+### Deviation I-11 (2026-10-23, before any source-map result): how the §5 source map is built
+- **Why.** §5 says the map wraps `QuantumCircuit.append` "while a Bugs4Q program builds its
+  circuit". The Bugs4Q programs are never executed: `bugs4q/extract.py` builds every circuit from
+  a re-typed port with the original line numbers cited in comments. So the map goes through the
+  ports.
+- **Map (`icpc/qiskit_source_map.py`).**
+  1. Run each buggy port with `QuantumCircuit._append` wrapped. Record the innermost port line on
+     the call stack for every instruction appended to the port's circuit (gates built in helper
+     functions get the helper's line; composed sub-circuits get the `compose`/`append` line).
+  2. Map each port line to a line of the original buggy file. Use the port's `# Lnn` comment where
+     there is one. Otherwise take the most similar original line (difflib ratio ≥ 0.6 on
+     whitespace-stripped text, comments removed), searched between the original lines of the
+     nearest commented port lines before and after it. Below 0.6, the line is unmapped and
+     counted.
+  3. Map each instruction of the prepared buggy circuit (the one RQ3 slices,
+     `rq3_bugs4q._load`) to a traced instruction. Align (name, qubits) sequences with difflib.
+     Within an unequal block of equal length, match by qubits. Every other instruction is unmapped
+     and counted.
+- **Measures (descriptive, per RQ3 Bugs4Q unit and slicer).**
+  - fault lines = the original lines of the fault-site instructions;
+  - line containment = whether the slice's lines include a fault line;
+  - line inspection cost = the number of distinct original lines in the slice, also relative to the
+    lines that create any instruction.
+- **Cross-check.** The buggy original programs are sent to the authors' own Quantum Slicer
+  (`qiskit-static` mode, which never executes them). Its per-instruction lines are compared with
+  this map on (name, qubits)-aligned instructions, and the agreement rate is reported.
+- **Cutoff.** §5's: dropped, and said so, if it is not working by 2026-10-31.
+- **Fix found by the cross-check (2026-10-23, before any line result was reported or used).** In
+  the first run, step 2 sent repeated identical statements (e.g. `circuit.x(search_register)`)
+  to the first matching original line. The cross-check flagged them, and the authors' tool was
+  right. Step 2 now searches in order: after the previous mapped line and before the next cited
+  one. The first run's output is replaced and kept out of any result.
+
+### Deviation I-12 (2026-10-23, author decision, before any S-cpdg result): the full classical PDG as a baseline
+- **Why.** The pre-registered S-du ports classical *data* dependence only. It ignores classical bits,
+  so it has no control dependence from a measurement to the gates its bit conditions. A classical
+  slicer follows both kinds of dependence. The author decided that the comparison must include the
+  full classical PDG, and that a correct slice must account for data, control and quantum dependence.
+- **S-cpdg (`icpc/cpdg.py`).** S-du's qubit rule unchanged, plus classical bits: a measurement also
+  writes its bit, and an `if_else` also reads the bits its condition tests. S-du's backward pass.
+- **Checked before any result.** S-cpdg equals S-du on all 704 unitary corpus-A pairs. It is larger on
+  35 of the 80 dynamic pairs. On the catalogue's teleportation entry (K13) it equals S-lc.
+- **Scoring (`icpc/cpdg_run.py`).** Exactly as the pre-registered runs: RQ1 soundness at |0…0⟩,
+  dependence recall and miss categories; RQ3 containment and size on the same units; families
+  soundness and recall.
+- **Reporting.** S-du stays reported as pre-registered (H1 is unchanged). S-cpdg is reported beside
+  it, descriptively, as the strongest classical baseline. In the paper, the wire rule is presented
+  as classical data and control dependence plus quantum dependence (a multi-qubit gate acts on all
+  its qubits).
+- **Fixed before any S-cpdg output (2026-10-23).** The first run was stopped by hand before it wrote
+  anything. Its backward pass copied S-du's, which never removes a written location, so a bit measured
+  twice would also pull in the overwritten measurement. S-cpdg now uses reaching definitions for
+  classical bits, as the definition in the paper and the wire rule's control edges do. Qubits are
+  unaffected: every rule reads what it writes. Rechecked: equal to S-du on all 704 unitary pairs, and
+  equal to S-lc on the catalogue's overwritten-bit entry (K14).
+
+### Deviation I-13 (2026-10-25, AFTER all RQ1 results; author decision): slice size against the dependence floor
+- **Why.** Table I reports mean slice size as a share of the circuit. Read alone, the wire rule's 70.4%
+  looks weak, but no dependence-complete slice can be smaller than the dependences themselves. The
+  sizes need that reference point.
+- **Added measures (descriptive, from committed files only; no new run, no test).** Computed in
+  `icpc/make_numbers.py` from `results/icpc/rq1/records.csv`, `rq1_lcq_remap/records.csv` and
+  `corpus_l/{circuits,slices}.csv`:
+  - the dependence floor, the mean of `n_influencing / n_ops` per pair;
+  - the wire slice's and the QPDG reading's mean excess over it, and the number of pairs where the
+    wire slice equals the dependence set;
+  - mean size by width bin (2–3, 4–6, 7–10, 11–14 qubits) for the floor, wire, QPDG reading and
+    commutation (applicable pairs);
+  - corpus-L mean sizes (size / n_ops), measured in the cost run but not reported before.
+- **Exclusion.** Two corpus-L circuits (`ham15-109-214`, `ham15-70`) were loaded with zero operations.
+  They have no size and are excluded from the size means, and counted.
+- **Reported.** A reference row in Table I (size and recall/precision only; the dependence set is not
+  run as a slice, so it has no soundness value), one RQ1 paragraph, and a size-by-width figure
+  (`icpc/make_result_figs.py::size`). None of the 267 earlier numbers changes; checked by diffing
+  `results/icpc/numbers.json`.
+
+### Deviation I-14 (2026-10-25, AFTER all results; author decision; exploratory): a tighter sound rule
+- **Why.** The wire slice is 4.7 points above the dependence floor on average, and commutation fails
+  under angle rebinding on 4 of 175 pairs. The author asked whether a tighter rule is possible.
+- **Status.** Exploratory and post hoc. It is outside the confirmatory family H1–H5, and no
+  pre-registered result is changed or replaced.
+- **B1, commutation for all angles (`icpc/lcq_symbolic.py`).** Replace every numeric gate angle by a
+  fresh `Parameter` before Qiskit's `LightCone`, which keeps a gate whose commutation depends on an
+  unbound angle. Union over X, Y and Z as in S-lcq; positions mapped back by name, qubits and clbits
+  in order. Scored as RQ1 (soundness at |0…0⟩, recall and precision), robustness as Deviation I-10
+  (R-basis, R-haar, R-param), and on the families and the catalogue.
+- **B2, the wire rule's excess (`icpc/wire_excess.py`).** Per-position influence for the pairs whose
+  wire slice exceeds the dependence set (`icpc/influence.py`, oracle only). Each excess operation is
+  tagged: (a) its removal alone changes the criterion's state; (b) removed by B1; (c) the criterion's
+  final state is the same under every perturbation; (d) cut off by a reset or measurement; (e) other.
+- **Decision gate (fixed now, before any B1 or B2 output).** A rule is reported as a slicer only if it:
+  - is independent of input and angle, with a written soundness argument;
+  - is 0 unsound on corpus A, the families and the catalogue;
+  - is robust on 100% of its applicable pairs in R-basis, R-haar and R-param;
+  - and, for a rule built from B2, reduces mean corpus-A size by at least 1 point.
+  Otherwise the result is reported as a finding, with its counts, and the rule is not used.
+- **B2 outcome and the rule it suggests (2026-10-25, after B2's output, before the rule's output).** Of the
+  1,548 excess operations on 225 pairs, 644 are removed by B1 and 4 change the criterion when deleted alone.
+  Of the remaining 844, 538 are in circuits with SWAP gates. Checked by hand on `basis_test_n4`: the
+  circuit ends with SWAPs, so the criterion's final state is the state of another wire, and a Givens block
+  that never reaches that wire is kept by the wire rule. **Rule S-lcw (`icpc/wire_swap.py`):** the wire
+  rule, except that a top-level, unconditioned `swap(a, b)` is a move. It joins the slice if a or b is
+  needed, and the needed set is permuted, a ↔ b, instead of being widened to both. A SWAP exchanges the
+  two wires' states exactly, for every input and with no angle, so the backward pass is sound by the
+  argument of Theorem 1 applied to the relabelled wires. Checked before scoring: with the move disabled the
+  pass must equal S-lc on every corpus-A pair. Scored as B1 (corpus A soundness and recall/precision,
+  robustness in all three regimes, families, catalogue) against the same gate.
+- **Gate outcome (2026-10-25).** B1 (S-lcqs) passes: 0 unsound on corpus A (732 applicable), families
+  and catalogue; robust 732/732, 732/732, 175/175; mean size 65.2% (S-lcq 64.4%). It is reported as a
+  slicer. S-lcw fails the size condition: 0 unsound, robust 784/784, 784/784, 187/187, recall 1.000, but
+  mean size 69.6% against 70.4%, a 0.74-point reduction (20 pairs in 5 circuits; 40 pairs have SWAPs).
+  It is not reported as a slicer; its counts may be reported as a finding about the wire rule's excess.
+
+### Deviation I-15 (2026-10-25, author decision; recorded before any Bugs4Q output of the tool): a static program slicer
+- **Why.** The study slices circuits, and its Bugs4Q lines come from *running* re-typed ports. The author
+  decided that the paper must present a real program slicer: one that reads a Qiskit program's source,
+  without running it, and applies the validated wire rule. See `TOOL_PLAN.md`.
+- **The tool (`tool/`).**
+  - srcML 1.1 parses the program with positions.
+  - A static interpreter (`tool/interp.py`) turns it into an operation trace (gate, qubits, bits,
+    condition bits, line, iteration, call sites, classical provenance). It never runs the program.
+    Unresolved indices, conditions and loops are over-approximated and recorded.
+  - The wire rule's backward pass (`tool/slicer.py`) gives the slice as operations, quantum lines and
+    classical lines.
+- **Developed on** the two figure programs and three test programs of our own (`tool/tests/programs/`)
+  only. On all five, the static trace equals the circuit Qiskit builds, and the slice of every qubit
+  equals S-lc on that circuit (`tool/tests/check_trace.py`, `check_slice.py`).
+- **Acceptance tests, fixed now and run once the tool is frozen (commit recorded):**
+  - **T1:** for each RQ3 Bugs4Q original, the static trace against the prepared circuit through the
+    committed source map. Compare the (gate, qubits, original line) sequences.
+  - **T2:** the tool's wire-rule quantum lines against the committed line results
+    (`results/icpc/source_map/units.csv`, slicer lc).
+  - **T3:** coverage on all 218 Bugs4Q Python files (resolved, partly resolved, unsupported, and why).
+  - **Reporting.** Differences are reported as found and never edited away. A difference found by T1
+    or T2 may be fixed only in a new, dated tool version, with both versions' results reported.
+- **Addendum (2026-10-25): nested conditions.** Found while checking the tool on a repetition code of our own,
+  which nests `if_test` blocks (`tool/tests/big/repetition_code.py`).
+  - **Oracle fix.** `common/oracle.py::terminal_measurements` looked only at an `if_else`'s outer condition.
+    A measurement read only by a nested condition was taken as terminal and never projected, so the inner
+    block never fired. It now counts every classical bit of the instruction as read. This can only make
+    fewer measurements terminal.
+    - Checked: `tests/test_oracle_icpc.py` and `tests/test_oracle.py` pass, and the catalogue output is
+      byte-identical.
+    - No study circuit nests conditions: corpus A is OpenQASM 2, and the catalogue, Bugs4Q ports and
+      families have single-level conditions or none. No committed result changes.
+  - **Circuit-level slicers.** The study's slicers (S-lc and the others in `slicers/registry.py`) read
+    only the outer condition of a nested `if_else`. On the repetition code, S-lc's slice of data[3] is
+    wrong on 29 of 30 random product inputs. The tool's slice, which reads every enclosing condition, is
+    wrong on none. This does not affect the study, for the same reason.
+- **Development checks so far (programs of our own, safe to run).** On 15 programs (2 figure programs,
+  3 construct tests, 10 larger ones, up to 1,842 operations), the static trace equals the executed
+  circuit. Barriers are dropped, as the study's loader does. The slice of every qubit equals S-lc, except
+  on the nested-condition program, where the difference is S-lc's.
+- **Freeze (2026-10-26, before any T1-T3 output).** The tool is frozen at commit `c797b25` (tag `tool-v1`).
+  - **Bugs4Q copy.** The /tmp copy of Bugs4Q was emptied by the system. The pinned commit 7a71983 was
+    downloaded again into `qdg-icpc-data/bugs4q` (218 Python files, as before). Checked against the
+    study's records: every one of the 136 source-map instructions points to an original line that
+    contains its gate call. The 9 apparent differences are the port's `cu1` -> `cp` renaming.
+  - **Comparison rules, fixed now.**
+    - T1 compares the tool's operations, without barriers and terminal measurements (as the study's
+      loader drops them), with the prepared circuit. Gate names are normalized for the port's API
+      renamings (`u1`->`p`, `cu1`->`cp`, `cnot`->`cx`, `toffoli`->`ccx`, `u3`->`u`, `iden`->`id`).
+    - T2 compares the lines of the operations in the tool's wire slice with the original lines of
+      S-lc's operations on the prepared circuit, mapped through `results/icpc/source_map/instructions.csv`.
+- **T1/T2 on tool-v1 (2026-10-26).** T1: 7 of 8 bugs trace-exact (136 of 137 operations). T2: 17 of 17 units
+  with mapped lines are line-equal. tool-v1 crashed on `Terra-0-4000/22` (a non-integer slice bound). That
+  program builds its circuit by rewriting a `DAGCircuit`, and the study's runtime source map could not
+  trace it either.
+- **tool-v2 (`6a01767`, tag `tool-v2`), fixing what T1 found.** Non-integer slice bounds evaluate to UNK. Converting
+  a circuit to a DAG is now reported as untraced. T1/T2 are rerun on tool-v2, and both versions' results are
+  kept (`results/icpc/tool_acceptance/tool-v1`, `tool-v2`).
+- **Coverage on LintQ's corpus, tool-v2 (2026-10-26, descriptive).** 7,567 Qiskit programs: all parse, and
+  2,749 yield a circuit. 1,460 build circuits only inside functions or classes that the file never calls.
+  55 failed: 38 hit the 60 s timeout, 10 had a `break` or `continue` outside a loop, 7 had evaluation errors.
+- **tool-v3 (`9123ece`, tag `tool-v3`), author decision.**
+  - Functions and class methods that are defined but never called are analysed as entry points, with
+    unknown arguments.
+  - A circuit of unknown size is handled soundly. Its registers grow to cover the indices used on them, an
+    unknown index stands for any qubit and is expanded to all of the circuit's qubits at the end, and an
+    unknown register layout widens every operation.
+  - A global step budget and statement-level errors are reported as not traced, instead of failing.
+  - All earlier checks are rerun on tool-v3 (development programs, T1-T3, textbook, LintQ), and the
+    numbers of every version are kept.
+- **Coverage on LintQ's corpus, tool-v3 (2026-10-26).** 4,136 of 7,567 programs yield a circuit (2,539 of them
+  fully resolved), and none fails. 463 programs carry a not-traced note.
+- **tool-v4 (`8d974dc`, tag `tool-v4`), soundness fix found by the pre-submission review.** tool-v3 interpreted
+  the body of a loop with an unknown iteration count twice. A dependence can be carried through more
+  iterations than that, so for some criteria the slice missed operations. For example, with the body
+  `cx(2,3); cx(1,2); cx(0,1)` and criterion q3, the dependence on `cx(0,1)` needs three iterations.
+  tool-v4 repeats the body len(touched)+1 times, and at least twice. Each further iteration can add only a
+  qubit the body touches to the needed set, so this many copies cover every dependence chain. The case is
+  a test program (`tool/tests/programs/unknown_loop.py`). All checks are rerun on tool-v4, and the earlier
+  versions' results are kept.
+
+### Deviation I-16 (2026-10-26, AFTER all results; author decision; exploratory): a flow-sensitive QPDG reading, and naming
+- **Why.** Yu & Zhao's QPDG [27] is the published baseline. S-yz (`slicers/yuzhao.py`) is
+  that baseline and was pre-registered, but its entanglement rule (D-yz-5) is the static, flow-insensitive
+  one: two qubits count as entangled if a two-qubit gate joins them anywhere in the circuit. A reader can
+  object that this reading is weaker than [27] intends. D-yz-5 already names the alternative.
+- **S-yzf (new).** The same graph as S-yz (DATA + CONTROL edges, the same two-qubit coupling rule), but
+  entanglement is flow-sensitive. Operations are processed in order with a union-find over qubits that is
+  updated after each two-qubit gate, and an ENTANGLEMENT edge v -> u (v < u, on different qubits) is added
+  only if the qubits of v and u are in the same component just after u. Its edges contain the DATA edges,
+  so every S-yzf slice contains the wire slice (expected sound) and is contained in the S-yz slice.
+- **Measured, fixed before the run.** On corpus A (784 pairs): soundness at |0...0>, dependence recall and
+  precision against the RQ1 ground truth, size; S-yz is recomputed alongside and must equal the committed
+  RQ1 records. Soundness on the structure families and the dependence catalogue. Reported whatever the
+  outcome, as an exploratory row beside S-yz, outside H1-H5. No other measure is run.
+- **Naming (author decision).** The paper calls the graph of the wire rule the quantum dependence graph
+  (QDG) and the baseline "QPDG (Yu and Zhao)". In the code under `qdg/`, `method_eval/` and `archive/`,
+  the class `QDG` is the earlier version's typed graph, which S-yz is built from; it is not the paper's QDG.
+- Code: `slicers/yuzhao.py::yuzhao_flow_slice`, driver `icpc/yz_flow.py`, output `results/icpc/yz_flow/`.
+- **Outcome (2026-10-26).** Corpus A: S-yzf is sound on all 784 pairs (0 of 80 dynamic pairs wrong), recall
+  1.000, precision 0.849, mean size 77.5% (S-yz 78.6%, S-lc 70.4%, dependence set 65.6%). Every S-yzf slice
+  contains the S-lc slice and lies within the S-yz slice, and the recomputed S-yz equals the committed RQ1
+  records. Families: 0 of 819 pairs unsound (S-yz also 0). Catalogue: 0 of 24 unsound. Reported as an
+  exploratory row of Table I and one sentence in RQ1.
+- **Coverage on LintQ's corpus, tool-v4 (2026-10-26).** 4,136 of 7,567 programs yield a circuit (2,525 fully
+  resolved), and none crashes. One program (`circuit_generation_4cde1d.py`) exceeds the 60 s limit, where
+  tool-v3 took 0.1 s: its nested loops of unknown length each repeat their body len(touched)+1 times, and the
+  copies multiply. Counts from `results/icpc/tool_coverage/lintq_v4.csv`; the paper's LintQ numbers now come
+  from tool-v4, and timeouts are counted separately from crashes.
+
+### Deviation I-17 (2026-10-26, AFTER all results; author decision; exploratory): foundations measures, forward slices, slice profiles, a new Section II example
+- **Why.** The author's review asked for a foundational treatment: what a quantum slice must and must not follow,
+  forward as well as backward slices, srcSlice-style slice profiles, slicing at the level of all program statements,
+  and a richer debugging scenario. Each candidate was first tested in exploratory scratch runs against a decision
+  rule (author rule: evaluate before adopting), and only the passing ones are adopted. The adopted measures are
+  produced by committed drivers; none enters H1-H5.
+- **Measures (driver `icpc/foundations_eval.py`, corpus A, the RQ1 oracle and ground truth, output
+  `results/icpc/foundations/`):**
+  - four-edge typed graph (UED/ED/MD/CD, `fouredge/src`) with and without its transitive entanglement closure,
+    against S-lc (is the closure the only difference?);
+  - undirected ("decomposition") reachability from every operation on the criterion qubit, in the QDG and in the
+    four-edge graph: soundness, size, recall, precision;
+  - backward QDG slices seeded at every operation on q vs at its last operation (equal by construction);
+  - for every unsound S-du and S-cpdg slice: whether the criterion's Z-basis outcome distribution still matches
+    (would a histogram check notice?);
+  - forward QDG slices of every operation: completeness against the per-operation influence sets
+    (`icpc/influence.py`) and the duality q in F(o) iff o in B(q).
+- **Slice profiles (driver `tool/corpus/profiles.py`, Bugs4Q, the Qiskit textbook, a seeded random sample of 500
+  LintQ programs):** per qubit, operations, lines, distinct names in qubit arguments (from the tool's gate table),
+  use inside functions, dependent qubits, conditioned operations, and backward vs forward line counts. Descriptive.
+- **Tool-v5 (tag `tool-v5`):** adds `forward_slice` and `slice_profile` and their CLI options. The backward slicer
+  and the interpreter are unchanged; all earlier checks are rerun and must give the tool-v4 results.
+- **Section II example.** The Qiskit textbook's Bernstein-Vazirani program (in our textbook corpus) with one seeded
+  slip: the ancilla is prepared with `h(n); x(n)` instead of `h(n); z(n)`, so the program returns 000 instead of the
+  secret 011. It replaces the 3-gate Bugs4Q bug in Section II; that real bug stays in Fig. 4 and Proposition 3.
+  The example's facts are computed by the tool and the oracle (figure generator), and the bug is labeled as seeded.
+- **Outcome (2026-10-26).** Foundations: on the 779 pairs whose criterion qubit is acted on (the other 5 RQ1 pairs
+  are idle qubits with empty slices), the four-edge graph without closure equals S-lc on all pairs; with closure it
+  keeps 75.7% (S-lc 70.8%). Undirected slices keep 93.9% at precision 0.713 (S-lc 0.923), so they are reported as a
+  pitfall. Seeding at every operation equals seeding at the last. 88 of 204 unsound S-cpdg slices (43%) and 88 of 216
+  unsound S-du slices (41%) keep the criterion's Z-basis distribution. Forward slices are complete and dual on all
+  3,156 operations (precision 0.930). Tool-v5: dev checks, nested check and T1/T2 identical to tool-v4; forward/
+  backward duality on all test programs (356 operation-qubit pairs). Profiles: backward and forward line counts differ
+  for 59/75/82% of qubits (Bugs4Q/textbook/LintQ sample), 14/45/56% are acted on inside a function. The automatic
+  alias count stays noisy (integer parameters such as `num_qubits` look like names), so only the hand-checked textbook
+  count is reported (3 of 5 flagged programs, `results/icpc/profiles/alias_check_textbook.csv`). Section II: the
+  textbook BV with the seeded line-25 slip (`programs/bv.py`, checked line by line against the textbook file);
+  Proposition 3(i) now uses this program, whose q0 is pure after every operation in both versions; the Bugs4Q bug stays
+  in Section II for the joint criterion and in Fig. 4. Numbers via `make_numbers.py` (Fd*, Prof*, Bv*).
+
+### Deviation I-18 (2026-10-26, AFTER all results; author decision): pre-submission review, tool-v6
+- **Why.** Four independent reviews (quantum semantics, slicing, empirical method, presentation) of the full
+  draft. Each issue was checked against the text, the code or the results before it was acted on.
+- **Tool-v6 (tag `tool-v6`).** Two soundness bugs in the static interpreter found by the slicing review and
+  reproduced on small programs: (1) the branches of an unknown condition ran one after another in one state, so
+  a variable assigned differently in them kept the last branch's value (`if UNK: k=0 else: k=1; qc.x(k)` acted on
+  one qubit, not as a may-operation); (2) a `return`/`break`/`continue` inside such a branch ended interpretation,
+  dropping later operations. Fixed by a join (each branch starts from the state before the `if`; a variable with
+  different values on different paths becomes unknown), by treating such exits as may-paths (the rest of the
+  function is interpreted as may-operations; return values are joined), by widening variables that change across
+  the copies of an unknown loop, and by counting bits as well as qubits in the loop bound. Also fixed: `len()` and
+  iteration of an unresolved external name (e.g. `sys.argv`) returned the length of its internal representation.
+  The forward pass now drops a reached bit that an unaffected measurement certainly overwrites, as the backward
+  pass does, so the duality holds for the implemented pair (new test program `t08_bit_overwrite.py`). The
+  circuit-level study slicers are unchanged; dev checks, nested check and T1/T2 equal tool-v5; coverage and
+  profiles are rerun on tool-v6.
+- **Tool-v7 (tag `tool-v7`).** The tool-v6 coverage rerun showed that the 60 s per-file limit of the corpus runs
+  was never enforced: SIGALRM cannot interrupt long C-level calls, and files ran for up to 8,191 s (53 files over
+  60 s already on tool-v4, none recorded as a timeout). On tool-v6 a few files grew sharply (e.g. a program that
+  allocates a register inside nested loops of unknown length reached the 200,000-operation cap), because each copy
+  of an unknown loop allocates fresh qubits and the loop bound grows to its cap. Tool-v7 enforces the limit: the
+  interpreter stops at a wall-clock deadline, the runners count a file that reaches it as a timeout (its partial
+  trace is not counted), and each file runs in its own process killed at the limit plus 15 s. The all-qubits set
+  is built only when needed. Slices without a limit are unchanged (dev checks, nested check, forward duality on
+  511 pairs). Acceptance, coverage and profiles are rerun on tool-v7, and the paper reports tool-v7; the tool-v6
+  results are kept.
+- **Paper changes.** New title (author decision); the language-model task is
+  removed from the paper (author decision; its results stay in `results/llm/`); Definitions 1-3 trace out the
+  classical bits and state the pre-readout criterion; the readout-observable count of wrong classical-PDG slices is
+  reported; the Bugs4Q lesson is restated (single-qubit histograms, not single-qubit criteria); the QPDG is described
+  as sound by construction under our reading; RQ3 reports every slicer's containment and the 96 QDG misses the QPDG
+  contains; MBFL is reported paired; H1, H2, H5 are stated to hold by construction and H1/H2 to come from the
+  earlier run; all post-hoc additions are listed as exploratory; corpus-L soundness at |0...0> is reported.
+
+### Deviation I-19 (2026-10-27, AFTER all results; author decision): review panel, exploratory analyses
+- **Why.** A review of the I-18 draft by five language-model reviewers recommended major revision
+  and listed seven must-fix items. The author approved all of them. Every analysis below is exploratory, added after
+  all results, and reported as such; no RQ, hypothesis, threshold or corpus changes.
+- **Ground-truth convergence (`icpc/gt_convergence.py`).** The section 2.1 procedure rerun on corpus A in four
+  cumulative stages: the original inputs and perturbations (asserted to reproduce `influence()` exactly), 6 more
+  perturbations per instruction, 30 more Haar product inputs, and 10 entangled inputs prepared by n-layer brickwork
+  circuits of Haar two-qubit gates. Reports the dependences each stage adds, every slicer's recall and precision
+  against the stage-3 set, and any dependence outside the QDG slice (Theorem 1 predicts none).
+- **QPDG under the read-only-control reading (`icpc/qpdg_ro.py`, `icpc/qpdg_ro_run.py`).** S-yzro and S-yzrof
+  change only D-yz-3 of the S-yz design log: data dependence follows S-cpdg's rule (a controlled gate writes only its
+  targets); static (S-yz) or flow-sensitive (S-yzf) entanglement closure; seed at the last instruction on the
+  criterion. Scored exactly as `icpc/cpdg_run.py` scores S-cpdg (RQ1, RQ3, families).
+- **Cluster-aware intervals (`icpc/cluster_ci.py`).** For the headline RQ1, H2, H3, RQ3 and H4 quantities: percentile
+  bootstrap intervals resampling units, circuits and algorithm families (names without size suffixes), plus
+  per-corpus point estimates.
+- **Size-matched random control (`icpc/rq3_size_control.py`).** Every rule's RQ3 containment against the exact
+  chance that a random set of its own size contains a fault-site instruction, 1 - C(n-f,k)/C(n,k).
+- **MBFL for every rule (`icpc/mbfl_all.py`).** The MBFL units, tests, mutants, Ochiai and EXAM of `icpc/mbfl.py`,
+  imported unchanged, filtered by S-du, S-cpdg, S-lc, S-yz and S-q, with operations examined and a random-order
+  baseline of the same slice.
+- **Findings during these runs.** S-q is not bitwise repeatable on Bugs4Q StackExchange #4 (84 operations, 8 qubits):
+  pruning decisions at its 1e-9 thresholds flip between calls in one process, single-threaded BLAS included, so
+  2 of 293 MBFL units get a different S-q slice when recomputed (`q_recomputed_differs`); `icpc/mbfl_all.py` uses
+  the slices stored by `icpc/mbfl.py`. `icpc/q_repeat.py` recomputes S-q three times on every corpus-A pair: all
+  784 equal the stored RQ1 slices and are sound. S-yzro/S-yzrof are sound on all structure families.
+- **Retitled (author decision, 2026-10-27).** "Quantum Program Slicing on a Semantic Basis"; abstract rewritten
+  to the paper's claims, including the negative mutation-based ranking result.
+- **Yu and Zhao's examples (exploratory, added 2026-10-27).** `icpc/yz_listings.py` transcribes Listings 1-5 of
+  [27] as circuits and runs every rule on them: S-yz equals S-lc on every qubit of every listing. It also transcribes
+  the edges of [27]'s Fig. 1 (the QPDG of Listing 1) as drawn. Backward reachability from `measure(1,1)` over them
+  misses `x(1)` and the second CNOT; q1 measures 1 with probability 1 in the program and 1/2 in that slice.
+  Output `results/icpc/yz_listings/`.
+- **Paper changes.** Claims reframed (the QDG is the known light cone; the semantics and the measurement are the
+  contribution); Theorem 1's step for resets, measurements and conditioned gates stated; the RQ1 soundness sentence
+  qualified for nested conditions; the threats' bias direction corrected (sampled dependences overstate recall and
+  understate precision); the hardware paragraph removed (an earlier slicer, phase-blind metric); noise and profile
+  text condensed; versions, hardware, seeds and archiving stated in Data Availability.
+
+### Package note (2026-10-27, after all results; no change to any rule, run or result)
+The anonymous replication package leaves out the material of the earlier version that this protocol
+cites but the paper does not use: `archive/` (the earlier artifact), `phase1_logs/` and `phase1_checks/`,
+`hardware/` with `results/icpc/hardware/` (the paper no longer reports hardware runs), and `figures/` (the
+earlier version's figures). Local paths in logs and result files are written as `<repo>` and `<data-root>`.
+`make_numbers.py` gives the same values without them; its four hardware macros, which the paper did not
+use, are removed.
+
+### Deviation I-20 (2026-10-27, AFTER all results; author decision; exploratory; recorded before any srcSlice output on the corpora): the slicer's classical lines from srcSlice
+- **Why.** The author asked that the tool's classical side be built on srcSlice, not only follow its design. The
+  quantum side (gate roles, the unrolled operation trace, the QDG backward pass) is unchanged, and no RQ, hypothesis,
+  threshold, corpus or reported line-slice result changes: the study's line slices are the quantum lines, which this
+  deviation does not touch.
+- **srcSlice build.** Upstream srcSlice at ce86ef8 with one patch (call-site linking in returns and conditions,
+  argument positions, member names, initializer dvars, output escaping, and Python support), shipped as a plain diff
+  under `tools/srcslice/` with its regression suite; srcML 1.1.0 as before.
+- **Method (`tool/srcslice.py`).** srcSlice's profiles of the program's srcML archive. For a qubit's QDG slice, the
+  start lines are its quantum lines and the header lines of the loops, conditions and `with` blocks that enclose
+  them. A profile is seeded when its use set holds a start line. The closure adds a profile's definition lines, every
+  profile whose dvars hold its name (same function or global), and, for a parameter at position k of f, every profile
+  whose cfuncs hold f{k}. The classical lines are the closure's lines minus the quantum lines.
+- **Comparison (`icpc/srcslice_classical.py`).** Per qubit of the dev programs, the Bugs4Q files, the textbook and the
+  I-17 LintQ sample: the interpreter's provenance lines (I-15) and srcSlice's classical lines, their recall and
+  precision with the interpreter's lines as reference, exact agreement, and srcSlice's time.
+- **Decision rule (fixed before any output).** the slicer reports srcSlice's classical lines if, over the dev programs and
+  Bugs4Q, they contain the interpreter's lines for at least 95% of the qubits. Otherwise the interpreter's lines stay
+  the output and srcSlice's are reported as a comparison. Either way, the paper reports the measured agreement.
+- **Outcome (recorded after the run).** On 1,610 qubits of 401 files, srcSlice's lines contain the interpreter's
+  for 82% of the qubits (85% over the dev programs and Bugs4Q), equal them for 40%, recall 0.88 and precision 0.52,
+  55 ms per file in the median. Below the 95% threshold, so the slicer reports the interpreter's lines and srcSlice's
+  are an option. The misses come from three srcSlice gaps: no use is recorded inside a subscript (`q[a]`, in
+  Python and in C), returned values are not linked to the call, and a module variable used inside a function is
+  not recorded. `results/icpc/srcslice/`.
+
+### Deviation I-21 (2026-10-27, AFTER the I-20 result; author decision; exploratory): two srcSlice gaps fixed, comparison rerun
+- **Why.** I-20 found srcSlice's classical lines below the 95% threshold and traced the misses to three gaps. The
+  author asked that the two that are defects be fixed: uses inside subscripts and module variables read inside
+  functions. The third, values returned by a function, is outside srcSlice's forward design and is left as it is.
+- **Change.** srcSlice records a name inside a subscript as a use of that variable, and on the right of an
+  assignment or in an initializer makes the assigned variable depend on it (Python and C). A read inside a function
+  falls back to the file-scope variable of that name, while a definition still looks up locally. A regression case
+  (`subscripts_globals`, 11 checks) is added, and all 122 checks pass. `tools/srcslice/srcslice-python.diff` now
+  holds both patches against upstream ce86ef8.
+- **Rerun.** `icpc/srcslice_classical.py` is unchanged and rerun on the same files, and the I-20 decision rule is
+  applied unchanged. Because the fix was made after the I-20 result was known, the paper reports both runs and says
+  so.
+- **Outcome (recorded after the rerun).** srcSlice's lines contain the interpreter's for 90% of the 1,610 qubits
+  and for 97% over the dev programs and Bugs4Q (273 of 276 on Bugs4Q), recall 0.92 and precision 0.52. Above the
+  threshold, so the static slicer (the tool's name, author decision) reports srcSlice's classical lines
+  by default (`tool/cli.py --classical srcslice`), and the interpreter's lines remain an option. The remaining 142
+  missed lines lie mostly in functions that build and return a circuit or a value, and in containers filled by
+  method calls. The I-20 run is kept in `results/icpc/srcslice_i20/`.
+
+### Deviation I-22 (2026-10-28, AFTER all results; author decision; exploratory; recorded before any output of the analyses below): OpenQASM front end, scalability, LintQ/QChecker comparison, comprehension measures
+- **Why.** The author asked for coverage of OpenQASM as well as Qiskit, a scalability study on large programs, a
+  comparison with LintQ and QChecker on their own data and examples, and an explicit comprehension account. No RQ,
+  hypothesis, threshold or corpus of RQ1–RQ4 changes. Scalability is reported under RQ4 as descriptive; the
+  comparisons and comprehension measures go in Sections IV and VII as exploratory.
+- **OpenQASM 2 front end (`tool/qasm.py`).** A line-mapped reader of OpenQASM 2 that builds the static slicer's operation
+  trace; srcML 1.1 has no OpenQASM language, and Behler et al.'s markup parser is unreleased. Acceptance test (fixed
+  now): on every corpus-A circuit, the trace equals the circuit the study loads, and every qubit's QDG slice equals
+  the study's circuit-level slice.
+- **One-pass slicing of every qubit.** One backward pass carrying, per location, the set of criterion qubits it
+  reaches. Acceptance test: equal to separate passes on corpus A and on the QASMBench circuits small enough to slice
+  qubit by qubit.
+- **Scalability (`icpc/scale_run.py`).** S1, every LintQ-corpus file, with per-stage times (srcML, interpretation,
+  slicing every qubit, srcSlice, profiles). S2, QASMBench medium and large through the front end: parse, one slice,
+  and all qubits in one pass. S3, our own parametric programs (QFT, GHZ, QAOA ring, repetition code) at n = 10 to
+  1,000. Baselines on the same inputs: srcSlice alone; Qiskit's DAG ancestors of the last operation on a qubit after
+  `qasm2.load`; Qiskit's `LightCone` pass; building the QPDG reimplementation. LintQ's and QChecker's reported times
+  are quoted with their hardware, not rerun. A per-input wall-clock limit of 600 s.
+- **LintQ/QChecker comparison (`icpc/lintq_compare.py`).** Data only, neither tool is run. LintQ's public
+  manual-inspection CSVs and SARIF (github.com/sola-st/LintQ) are downloaded as data. C1: for each LintQ true
+  positive on its own corpus that the static slicer traces, whether the warned line is in the warned qubit's profile, whether
+  a profile predicate exposes the pattern, and the lines a developer reads. Predicates fixed now: OpAfterMeas (a
+  non-measure operation on q after a measurement of q), DoubleMeas (two measurements of q with no operation on q
+  between), OversizedCircuit (a qubit no operation acts on), CondWoMeas (a condition on a bit no measurement writes),
+  InsuffClasReg (more measured qubits than classical bits). C2: operations created in loop iterations beyond the
+  10th, and over-approximated operations, in our traces of LintQ's corpus. C3: LintQ Figs. 1, 5, 6, 11b and
+  QChecker Fig. 5 transcribed as our own programs and sliced. C4: the 22 Bugs4Q output bugs QChecker cannot detect,
+  crossed with the Bugs4Q units whose lines the study maps.
+- **Comprehension measures.** Per qubit, the lines of its slice over the program's code lines (non-blank,
+  non-comment), on the LintQ corpus, Bugs4Q and the textbook.
+- **Correction (2026-10-28, before any C1 output).** LintQ's rule for InsuffClasReg is `ql-unmeasurable-qubits`, a
+  circuit with more qubits than classical bits, so the predicate is "the circuit has more qubits than classical bits",
+  not "more measured qubits than bits". Rules mapped to predicates: `ql-operation-after-measurement`,
+  `ql-double-measurement`, `ql-oversized-circuit`, `ql-conditional-without-measurement`, `ql-unmeasurable-qubits`.
+  The other five rules (ghost composition, constant classical bit, deprecated identity, measure-all abuse, operation
+  after transpilation) concern API use, not qubit dependence, and are reported as outside the profile.
+- **LintQ data.** `data/lintq_artifact/`, from github.com/sola-st/LintQ at the commit in `COMMIT` (MIT licence):
+  the inspection CSVs of `bug_reports/` and `data.sarif` of `data/analysis_results/exp_v08/codeql_2024-03-01_08-43-53`.
+- **Script fix (2026-10-28, after the first C1 run).** The first run counted a circuit with no operation as "no
+  circuit", so the 29 OversizedCircuit warnings, whose circuits are built on the warned line and never used, were
+  untraced. A circuit built on the warned line now counts with or without operations. No predicate changed.
+- **Run note (2026-10-28, before S2 started).** S2's baselines run by file size in batches of four, and a baseline is
+  not run on circuits larger than a batch in which every circuit hit the 600 s limit; those are recorded as skipped.
+  the static slicer runs on every circuit. This bounds the run time; the limit is unchanged.
+- **Findings during the runs (2026-10-28).** (1) The interpreter cut a known `for` loop at 10,000 iterations without a
+  note, so two LintQ-corpus files (`circuituse_0c5a5d.py`, `qaoa_def_82b4c7.py`) and the largest S3 sizes were traced
+  incompletely. A longer loop is now read as a loop of unknown length (the sound over-approximation of I-15) with a
+  note, and a cut sequence is noted. No study circuit, dev program, Bugs4Q or textbook file reaches the limit. S1 and
+  S3 are rerun. (2) The LightCone baseline was first run on circuits with terminal measurements, which the pass
+  rejects; it is rerun on circuits prepared as in RQ2 (barriers and terminal measurements dropped).
+
+### Deviation I-23 (2026-10-28, AFTER all results; author decision after an internal review; exploratory; recorded before any output below)
+- **Why.** A review of the draft raised the circularity of the LintQ comparison, the reuse of the files that exposed
+  the srcSlice gaps, unlike-for-like timing baselines and unexplained coverage. No RQ, hypothesis or threshold changes.
+- **LintQ predicates on warnings LintQ's authors rejected.** The I-22 predicates are evaluated, unchanged, on the
+  warnings of the five qubit rules that the inspection labels FP, and on every SARIF warning of those rules. A
+  predicate that fires on a rejected warning is a false alarm of the profile view.
+- **Held-out srcSlice comparison.** `icpc/srcslice_classical.py` unchanged, on a held-out sample of 500 LintQ-corpus
+  files (seed 20261028) that are neither in the I-17 sample nor among the files whose misses were inspected for
+  I-21. Reported against the same 95% threshold, as a check of the I-21 fixes.
+- **Like-for-like timing.** On the S2 circuits, the static slicer's one-qubit slice against Qiskit's one-qubit DAG
+  ancestors, each without reading; the static slicer's all-qubit slice against n one-qubit Qiskit slices.
+- **Coverage.** The S1 files that yield no circuit, classified by a fixed rule on the file text: no circuit
+  construction (`QuantumCircuit(` absent), a circuit built only from a file or library call (`from_qasm`, `qasm2.load`,
+  `QuantumCircuit.from`, `transpile(` without gate calls), or other.
+
+### Deviation I-24 (2026-10-28, AFTER all results; author decision after an external brief; exploratory; recorded before any output below)
+- **Why.** The brief asks what the minimal correct slice is and how far each rule is from it. No RQ, hypothesis,
+  threshold, input or corpus changes. Everything below is exploratory and reported as such.
+- **Nesting (Check 2).** On the 784 RQ1 pairs, with the dependence set D of `icpc/influence.py` (unchanged), assert
+  D ⊆ QDG and QDG ⊆ QPDG (slicers `lc` and `yz` of `slicers/registry.py`, unchanged). Every violation is reported.
+  Count the pairs with D = QDG and with QDG = QPDG.
+- **The dependence set as a slice (Check 1).** Materialise each circuit restricted to D, exactly as RQ1 materialises
+  a slice, and apply the RQ1 oracle unchanged (reduced state of the criterion qubit at |0...0>, sound iff
+  fidelity >= 1 - 1e-6). D is measured with finitely many inputs, so it approximates the true dependence set from
+  below, and a failure is reported as it is, not explained away.
+- **Size by width.** From `results/icpc/rq1/records.csv`, unchanged: mean slice share of D, QDG and QPDG by qubit
+  count. No new run.
+- **The single write-set count.** From `results/icpc/rq1/misses.csv`, unchanged: of the dependences the classical
+  PDG (`du`) misses, how many the QDG keeps, by miss category. No new run.
+- **Two-qubit gates in both directions (evidence only).** For each standard two-qubit gate of Qiskit and each
+  direction a -> b, search seeded random product inputs and single-qubit perturbations on a for a change in b's
+  reduced state. Reported as evidence that dropping a qubit from a gate's write set is unsound for these gates; no
+  general claim and no theorem.
+- **Script.** `icpc/nesting.py` -> `results/icpc/nesting/`; `icpc/gate_signal.py` -> `results/icpc/gate_signal/`.
+
+### Deviation I-25 (2026-10-28, AFTER all results; author decision; exploratory; recorded before the data is downloaded)
+- **Why.** LintQ's corpus predates Qiskit 1.0. Coverage of the static slicer on current Qiskit is measured on Qiskit HumanEval
+  (Vishwakarma et al. 2024), 101 tasks written and peer-reviewed by Qiskit experts for Qiskit >= 1.0. No RQ,
+  hypothesis or threshold changes.
+- **Data.** github.com/qiskit-community/qiskit-human-eval at commit 555f329651209e6eb108787cff30626a03a4cadf
+  (Apache-2.0): `dataset/dataset_qiskit_test_human_eval.json` (the standard set) and, reported separately,
+  `dataset/dataset_qiskit_test_human_eval_hard.json`. Stored under the data root in `qiskit_human_eval/`, with its
+  licence and commit, and checksummed. The files are read, never executed; the tasks' tests are not used.
+- **Programs.** One file per task: the task's prompt followed by its canonical solution, exactly as given. The
+  test code is not included. A function the file defines and never calls is analysed as an entry point with
+  unknown arguments, as for every corpus.
+- **Measures.** Those of S1 (`scale_run.s1_one`, unchanged): a circuit or not, operations, qubits, stage times,
+  and each qubit's slice lines over code lines. Files with no circuit are classified by the I-23 rule
+  (`coverage_reasons.reason`, unchanged), and the interpreter's notes are counted by kind. Reported per set and
+  per the dataset's task category and difficulty.
+- **Script.** `icpc/qhe_run.py` -> `results/icpc/qhe/`.
+- **Correction (2026-10-28, before any output; the first run was stopped and wrote no result).** The dataset at
+  this commit has 151 tasks in each set, not 101, and no category field, so results are reported per set and per
+  difficulty (basic 79, intermediate 67, difficult 5 in each set). In the hard set the prompt is an English
+  description and the canonical solution is the whole program, so a hard-set file is the canonical solution alone;
+  a standard-set file stays the prompt followed by the canonical solution. Each file runs under the hard per-file
+  limit of S1 (`tool/corpus/hardlimit.run_all`, 120 s), because the first run hung on one file.
+- **Findings of the run (2026-10-28).** The hard set's canonical solutions are the standard set's 151 programs,
+  whole, so the hard set adds no program and serves as a consistency check; its counts equal the standard set's.
+  Slice shares are reported on the hard-set files, which hold the program without the prompt's docstring. Of the
+  four standard tasks that construct a circuit and yield none, one builds an empty circuit and three use
+  `QuantumCircuit.prepare_state`, which the interpreter does not model.
+
+### Deviation I-26 (2026-10-28, AFTER all results; author decision; exploratory; recorded before any code or output)
+- **Why.** Qiskit's in-circuit control flow (`while_loop`, `for_loop`, `switch`, and the `else` branch of `if_test`)
+  runs on the device and is conditioned on measured bits. The static interpreter treated these blocks as plain
+  `with` blocks, interpreting the body once with no condition bits, so loop-carried dependences and the classical
+  control dependence on the measurement were lost. No RQ, hypothesis, threshold or study circuit changes: the study
+  circuits (OpenQASM 2) contain none of these constructs, so every RQ1-RQ4 number stays as it is.
+- **Semantics.** A circuit loop is sliced by repeating its body until the set of needed qubits and bits stops
+  growing (the treatment of Python loops of unknown length in I-15), with every operation in the body conditioned
+  on the bits its condition reads. `switch` cases and the `else` branch are conditioned on the target's bits. A
+  `for_loop` over a known index set is unrolled; otherwise it is read as a loop of unknown length. The soundness
+  argument extends Theorem 1 to circuits with these loops on paper; the Isabelle model is not extended.
+- **Validation.** A suite of our own programs with these constructs (safe to run, in `tool/tests/controlflow/`). For
+  each program and each qubit, the circuit with every operation outside the slice deleted must give the qubit the
+  same reduced density matrix as the whole circuit, under Qiskit Aer's density-matrix simulation, at |0...0> and at
+  seeded random product inputs. Pass criterion: every program, every qubit, every input (fidelity >= 1 - 1e-6). The
+  real programs that use these constructs (LintQ corpus: 1 while_loop, 1 for_loop, 1 switch, 2 if_test files;
+  Qiskit HumanEval: 1 for_loop, 5 if_test) are traced statically and never executed.
+- **Script.** `tool/tests/check_controlflow.py` -> `results/icpc/controlflow/`.
+- **Findings (2026-10-28).** All 33 slices of the 10 programs are sound at all six inputs (`check.csv`). Negative
+  controls (`check_controlflow_negative.py`, `negative.json`): removing the kickback CNOT from qubit 1's slice in
+  `cf02` gives fidelity 0.67, and the slices of the archived interpreter are wrong on 7 of the 10 programs (six
+  sliced programs whose while_loop no longer terminates, because the slice dropped the measurement that ends it, and
+  one, `cf04`, whose body was taken once). Real programs (`real.csv`): of the 7 that use in-circuit control flow
+  (the eighth match, `main_59bca5.py`, mentions switch only in comments), 5 are traced with their conditioned
+  operations; `standard_072` enters if_test through contextlib.ExitStack and `standard_150` receives its circuit as
+  a parameter. The alias of a `with` statement is a sibling `<alias>` element in srcML; the first version read it
+  from the expression and missed it, which the switch program exposed before any recorded run.
+
+### Deviation I-27 (2026-10-29, AFTER all results; author request; exploratory; recorded before the measurement below)
+- **Correction to the role table (E1).** The table is derived from every public QuantumCircuit method whose
+  parameters include qubits. Five such methods add no operation: `from_instructions` (a constructor), `if_else` (the
+  non-context form of control flow, which the interpreter reads from `with` blocks) and the timing queries
+  `qubit_duration`, `qubit_start_time` and `qubit_stop_time`. They leave the table, which now has 68 methods (47 of
+  Qiskit 2.3, 15 removed in Qiskit 1.0, and measure, reset, barrier, delay, initialize and unitary). One file of
+  LintQ's corpus calls one of them; it is rerun beside the old results (`rerun_gate_table.py`, RERUNS.md).
+- **Unmodelled calls (descriptive).** The interpreter's notes on calls it does not model are counted per program on
+  LintQ's corpus, the Qiskit textbook, Bugs4Q and Qiskit HumanEval (files read, never executed), with
+  `icpc/unmodelled_calls.py` -> `results/icpc/unmodelled/`: QuantumCircuit methods that are not modelled, methods
+  whose result is treated as unknown, conversions of a circuit to a DAG, and circuits passed to code the interpreter
+  cannot see.
+- **Addendum (2026-10-29, before the measurement).** `noop`, which marks qubits as used and does nothing, joins
+  `barrier` and `delay` as never part of a slice. No program of the corpora calls it, so no result changes.
+- **Findings of the unmodelled-call count (2026-10-29).** On LintQ's corpus, 183 programs call a QuantumCircuit
+  method the interpreter does not model, 142 one whose result it treats as unknown, 33 convert a circuit to a DAG,
+  and 294 pass a circuit to code it cannot see (`summary.json`). The interpretation-only pass yields a circuit for
+  4,186 programs against 4,182 in S1, because S1 also runs srcML and srcSlice under the same 120 s limit and has more
+  timeouts; the paper keeps S1's count.
+- **Calls per kind (descriptive, before the count).** For the role table in Section V, the programs of LintQ's corpus
+  that call each kind of method are counted from the source text with one rule for every row: a program counts for a
+  kind if it calls a method of that kind as `.name(`. The kinds are the categories of the role table, composition,
+  circuit control flow, whole-circuit transforms and DAG conversion. Script `icpc/calls_per_kind.py` ->
+  `results/icpc/unmodelled/calls_per_kind.json`.
+- **Correction (2026-10-29, after the first count).** `circuit_to_dag` is a function, called as `circuit_to_dag(...)`
+  without a receiver, so the rule `.name(` found 12 programs; it is counted as `name(` and finds 100. The other kinds
+  are unchanged. The interpreter's count, 33, is of conversions of a circuit it traced, a different measure.

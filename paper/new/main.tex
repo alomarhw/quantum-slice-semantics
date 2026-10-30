@@ -1,0 +1,78 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage{amsmath,amssymb,stmaryrd}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage[table]{xcolor}
+\usepackage{pifont}
+\newcommand{\yes}{\ding{51}}\newcommand{\no}{\ding{55}}
+\usepackage{tikz}
+% Harvey balls for the comparison table: does, partly does, does not.
+\DeclareRobustCommand{\hb}[1]{\tikz[baseline=-0.55ex]{\draw[line width=0.4pt] (0,0) circle (0.75ex);
+  \ifcase#1\or\fill (0,0.75ex) arc (90:270:0.75ex) -- cycle;\or\fill (0,0) circle (0.75ex);\fi}}
+\DeclareRobustCommand{\full}{\hb{2}}\DeclareRobustCommand{\half}{\hb{1}}\DeclareRobustCommand{\none}{\hb{0}}\newcommand{\na}{--}
+\usepackage{url}
+\providecommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\Bw}{B_{\mathrm{QDG}}}
+\newcommand{\Fw}{F_{\mathrm{QDG}}}
+% The tool's name, in one place. tools/build_anon.sh defines \anonbuild for the double-anonymous submission.
+\ifdefined\anonbuild\newcommand{\tool}{the static slicer}\else\newcommand{\tool}{the static slicer}\fi
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\input{../numbers}
+
+\begin{document}
+\title{What Must a Quantum Slice Keep? Slicing Quantum Programs for Comprehension}
+\author{\IEEEauthorblockN{Anonymous Author(s)}}
+\maketitle
+
+\begin{abstract}
+Which statements must a slice of a quantum program keep to preserve the state of selected qubits? The dependence rules
+proposed for quantum programs have not been evaluated against this question, which is fundamental to using slicing for
+program comprehension. We define a correct slice as one that preserves the selected qubits' joint state for every input
+state, and a dependence as an operation after which a change can alter that state. Our approach builds the quantum
+dependence graph (QDG) from a write-all rule, under which a gate writes every qubit it acts on, its controls included.
+We prove that QDG slices are correct and retain every dependence, and that classical data, classical control and
+quantum data dependence suffice, so further kinds proposed for quantum programs, such as entanglement dependence, add
+no dependence the QDG misses. We compare the QDG with alternative rules on \numNPairs{} circuit--qubit pairs and
+\numStudyFaultUnits{} fault units. Treating controls as read-only, as the classical program dependence graph (PDG) does,
+gives incorrect slices for \numCpdgUnsoundPct{} of the pairs, and \numFdCpdgZMatchPct{} of these hide the error because
+the qubit's measurement outcomes match those of the whole program. The other proposed quantum PDG that we compare with
+keeps \numYzLcExcessRatio{} times as many operations that cannot affect the selected qubits as the QDG, and
+pruning slices to make them smaller removes genuine dependences. QDG slices contain \numRqThreeContainLc{} of the seeded
+faults and take milliseconds to compute, but they do not improve the ranking of mutation-based fault localization.
+These findings provide a semantic foundation for quantum slicing and clarify its benefits and limits for
+comprehension and debugging.
+\end{abstract}
+
+\begin{IEEEkeywords}
+program slicing, program comprehension, quantum programs, dependence analysis, light cone, empirical study
+\end{IEEEkeywords}
+
+% Sections are written one at a time and agreed with the author before the next starts.
+\input{sections/intro}
+
+\input{sections/example}
+
+\input{sections/related}
+
+\input{sections/core}
+
+\input{sections/design}
+
+\input{sections/results}
+
+\input{sections/implications}
+
+\input{sections/threats}
+
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{../references}
+\end{document}
